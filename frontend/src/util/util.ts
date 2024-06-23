@@ -3,5 +3,5 @@
  * @returns string for the api endpoint
  */
 export function getApiUrl() {
-  return process.env.REACT_APP_API_ENDPOINT ?? 'http://localhost:8080';
+  return process.env.REACT_APP_API_ENDPOINT ?? 'http://localhost:8090';
 }
