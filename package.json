@@ -1,0 +1,14 @@
+{
+  "name": "cmpt276-groupproject",
+  "version": "1.0.0",
+  "description": "Group project for CMPT 276",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start": "concurrently \"npm:start-frontend\" \"npm:start-backend\"",
+    "start-frontend": "cd frontend && npm start",
+    "start-backend": "cd backend && mvnw spring-boot:run"
+  }  
+}
