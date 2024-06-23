@@ -10,7 +10,7 @@ export function Dashboard() {
   return (
     <div>
       <h1 className={style.dashboardTitle}>
-        Example dashboard page
+        Example dashboard page!!!
       </h1>
 
       <Grid rows={3} columns={3} />
