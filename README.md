@@ -1,21 +1,15 @@
 # How to run the app
-1. Install npm and node locally
-    - https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-2. Setup proper environment file
-    - Rename `template.env` in `/frontend` into `.env` and fill in env variables where applicable
-3. Install frontend dependencies
+1. Install nodejs (npm comes with it)
+    - https://nodejs.org/en
+2. Setup proper environment file in frontend
+    - Duplicate `template.env` in `/frontend` and rename new file into `.env`, fill in env variables where applicable
+3. Install frontend dependencies (from root dir)
     ```
     cd frontend
     npm install
     ```
-4. Startup backend (from root dir)
+4. Start the app (from root dir)
     ```
-    cd backend
-    mvn spring-boot:run
-    ```
-5. Startup frontend (from root dir)
-    ```
-    cd frontend
     npm start
     ```
-6. Access app (http://localhost:3000)
+5. Access app (http://localhost:3000)
