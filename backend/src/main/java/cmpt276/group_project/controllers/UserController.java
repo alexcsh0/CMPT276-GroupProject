@@ -19,10 +19,14 @@ public class UserController {
     private JWT jwtUtil;
     
     //registers user and returns token and user type
+    //if username already exists, returns "Username already exists"
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         User registeredUser = userService.registerUser(
-            user.getUsername(), user.getPassword());
+            user.getUsername(), user.getPassword(), user.getUserType());
+        if (registeredUser == null) {
+            return ResponseEntity.status(409).body("Username already exists");
+        }
         String token = jwtUtil.generateToken(registeredUser.getUsername());
         return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUserType()));
     }
@@ -33,7 +37,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody User user) {
         User loggedInUser = userService.login(
             user.getUsername(), user.getPassword());
-        if (loggedInUser == null) {
+        if (loggedInUser != null) {
             String token = jwtUtil.generateToken(loggedInUser.getUsername());
             return ResponseEntity.ok(new AuthResponse(token, loggedInUser.getUserType()));
         }
