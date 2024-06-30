@@ -40,9 +40,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const checkExistingToken = async () => {
       const token = localStorage.getItem(tokenTitle);
       if (token) {
-        await axios.post(`${getApiUrl()}/validate-token`, { token })
+        await axios.post(`${getApiUrl()}/api/users/validate`, token)
           .then((response) => {
-            if (response?.data?.userType) {
+            if (response?.data?.userType !== undefined) {
               setUser({ token, userType: response.data.userType });
             }
           })

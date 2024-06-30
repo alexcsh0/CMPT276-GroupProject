@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   getApiUrl,
-  getCheckboxChange,
   getHandleChange
 } from '../../../util/util';
 import {
   Box,
   Button,
-  Checkbox,
   CircularProgress,
-  FormControlLabel,
   Link,
   TextField,
   Typography
@@ -19,16 +16,16 @@ import { useUser } from '../../common/user-context/user-context';
 import { useNavigate } from 'react-router-dom';
 
 /**
- * Page for user login
- * @returns Login react component
+ * Page for user registering
+ * @returns Register react component
  */
-export function Login() {
+export function Register() {
   const user = useUser();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [confirmedPassword, setConfirmedPassword] = useState('');
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,18 +36,19 @@ export function Login() {
     }
   }, [user, navigate]);
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     if (loading) return;
     setLoading(true);
 
     try {
-      await axios.post(`${getApiUrl()}/api/users/login`, {
+      await axios.post(`${getApiUrl()}/api/users/register`, {
         username,
-        password
+        password,
+        userType: 0
       }).then((response) => {
         try {
           const { token, userType } = response.data;
-          user.login(token, userType, rememberMe);
+          user.login(token, userType, true);
           navigate('/');
         } catch (error) {
           setError('Invalid username or password');
@@ -78,7 +76,7 @@ export function Login() {
       }}
     >
       <Typography variant="h5" component="div" sx={{ mb: 2 }}>
-        Sign In
+        Create an account
       </Typography>
 
       {error
@@ -105,32 +103,30 @@ export function Login() {
         sx={{ mt: 2 }}
         disabled={loading}
       />
-      <FormControlLabel
-        label="Remember Me"
-        control={
-          <Checkbox
-            color="primary"
-            value={rememberMe}
-            checked={rememberMe}
-          />
-        }
-        onChange={getCheckboxChange(setRememberMe)}
-        sx={{ mt: 1, textAlign: 'left' }}
+      <TextField
+        label="Confirm Password"
+        type="password"
+        value={confirmedPassword}
+        onChange={getHandleChange(setConfirmedPassword)}
+        fullWidth
+        required
+        sx={{ mt: 2 }}
+        disabled={loading}
       />
 
       <Button
-        onClick={handleLogin}
+        onClick={handleRegister}
         variant="contained"
         color="primary"
         fullWidth
         sx={{ mt: 2 }}
       >
-        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Login'}
+        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Register'}
       </Button>
 
       <Box sx={{ mt: 2, textAlign: 'center' }}>
-        <Link href="/register" variant="body2">
-          Don't have an account? Sign Up
+        <Link href="/login" variant="body2">
+          Already have an account? Sign in
         </Link>
       </Box>
     </Box>

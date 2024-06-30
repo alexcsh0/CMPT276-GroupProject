@@ -7,6 +7,7 @@ import { ErrorPage } from './components/pages/error/error';
 import { Dashboard } from './components/pages/dashboard/dahsboard';
 import { Login } from './components/pages/login/login';
 import { UserProvider } from './components/common/user-context/user-context';
+import { Register } from './components/pages/login/register';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/register',
+    element: <Register />,
     errorElement: <ErrorPage />
   }
 ]);
