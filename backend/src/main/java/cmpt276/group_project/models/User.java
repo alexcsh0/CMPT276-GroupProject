@@ -8,9 +8,15 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int uid;
+    private int id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private int userType;
 
     //constructors
@@ -35,8 +41,8 @@ public class User {
         return userType;
     }
 
-    public int getUid() {
-        return uid;
+    public int getid() {
+        return id;
     }
 
     //setters
@@ -52,7 +58,7 @@ public class User {
         this.userType = userType;
     }
 
-    public void setUid(int uid) {
-        this.uid = uid;
+    public void setid(int id) {
+        this.id = id;
     }
 }
