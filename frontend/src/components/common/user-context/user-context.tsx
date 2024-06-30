@@ -43,8 +43,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           await axios.post(`${getApiUrl()}/api/users/validate`, token)
             .then((response) => {
-              if (response?.data?.userType !== undefined) {
-                setUser({ token, userType: response.data.userType });
+              try {
+                const { token, userType } = response.data;
+                setUser({ token, userType });
+              } catch (error) {
+                localStorage.removeItem(tokenTitle);
+                setUser(null);
               }
             })
             .catch(() => {
