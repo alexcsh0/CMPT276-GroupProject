@@ -40,17 +40,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const checkExistingToken = async () => {
       const token = localStorage.getItem(tokenTitle);
       if (token) {
-        await axios.post(`${getApiUrl()}/api/users/validate`, token)
-          .then((response) => {
-            if (response?.data?.userType !== undefined) {
-              setUser({ token, userType: response.data.userType });
-            }
-          })
-          .catch(() => {
-            localStorage.removeItem(tokenTitle);
-            setUser(null);
-          })
-          .finally(() => setLoading(false));
+        try {
+          await axios.post(`${getApiUrl()}/api/users/validate`, token)
+            .then((response) => {
+              if (response?.data?.userType !== undefined) {
+                setUser({ token, userType: response.data.userType });
+              }
+            })
+            .catch(() => {
+              localStorage.removeItem(tokenTitle);
+              setUser(null);
+            })
+            .finally(() => setLoading(false));
+        } catch (error) {
+          setLoading(false);
+        }
       } else {
         setLoading(false);
       }
