@@ -10,8 +10,8 @@ export function Dashboard() {
   return (
     <>
       <Navbar role="admin" />
-      <Navbar role="newUser" />
-      <Navbar role="existingUser" />
+      {/* <Navbar role="newUser" /> */}
+      {/* <Navbar role="existingUser" /> */}
       <div>
         <h1 className={style.dashboardTitle}>
           Example dashboard page!!!

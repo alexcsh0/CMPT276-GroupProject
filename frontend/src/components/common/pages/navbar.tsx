@@ -56,7 +56,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
           <Button
             key={page}
             onClick={handleCloseNavMenu}
-            sx={{ my: 2, color: 'white', display: 'block' }}
+            sx={{ my: 2, color: 'white', display: 'block', '&:hover': { fontWeight: 'bold' } }}
           >
             {page}
           </Button>
@@ -142,7 +142,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
                 >
                   {settings.map((setting) => (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
+                      <Typography textAlign="center" sx={{ '&:hover': { fontWeight: 'bold' } }}>{setting}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>
