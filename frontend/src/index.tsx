@@ -4,14 +4,10 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ErrorPage } from './components/pages/error/error';
-<<<<<<< HEAD
-import { Dashboard } from './components/pages/dashboard/dashboard';
-=======
 import { Dashboard } from './components/pages/dashboard/dahsboard';
 import { Login } from './components/pages/login/login';
 import { UserProvider } from './components/common/user-context/user-context';
 import { Register } from './components/pages/login/register';
->>>>>>> cdec383d55be863d5fef62bac0bfe74b37386059
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
