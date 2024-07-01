@@ -86,17 +86,19 @@ const Navbar: React.FC<Props> = ({ role }) => {
               <>
                 {role === 'existingUser' || role === 'admin' ? (
                   <>
-                    <IconButton
-                      size="large"
-                      aria-label="show 17 new notifications"
-                      color="inherit"
-                      sx={{ mr: 2 }}
-                      onClick={handleOpenNotificationsMenu}
-                    >
-                      <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                      </Badge>
-                    </IconButton>
+                    <Tooltip title="Alert Notifications">
+                      <IconButton
+                        size="large"
+                        aria-label="show 17 new notifications"
+                        color="inherit"
+                        sx={{ mr: 2 }}
+                        onClick={handleOpenNotificationsMenu}
+                      >
+                        <Badge badgeContent={17} color="error">
+                          <NotificationsIcon />
+                        </Badge>
+                      </IconButton>
+                    </Tooltip>
                     <Menu
                       sx={{ mt: '45px' }}
                       id="menu-notifications"
