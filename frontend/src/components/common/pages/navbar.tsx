@@ -3,18 +3,17 @@ import { AppBar, Toolbar, IconButton, Typography, Box, Button, MenuItem, Menu, A
 import DirectionsTransitIcon from '@mui/icons-material/DirectionsTransit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import styles from './navbar.module.css';
+import { useUser, UserTypes } from "../user-context/user-context";
+import { useNavigate } from "react-router-dom";
 
 const userPages = ['Calendar', 'Routes'];
 const adminPages = ['Alerts', 'Schedule'];
 const settings = ['Profile', 'Settings', 'Logout'];
 
-type UserRole = 'newUser' | 'existingUser' | 'admin';
+export function NavBar() {
+  const { user } = useUser();
+  const navigate = useNavigate();
 
-interface Props {
-  role: UserRole;
-}
-
-const Navbar: React.FC<Props> = ({ role }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [anchorElNotifications, setAnchorElNotifications] = React.useState<null | HTMLElement>(null);
@@ -27,10 +26,6 @@ const Navbar: React.FC<Props> = ({ role }) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleOpenNotificationsMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNotifications(event.currentTarget);
-  };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -39,14 +34,18 @@ const Navbar: React.FC<Props> = ({ role }) => {
     setAnchorElUser(null);
   };
 
-  const handleCloseNotificationsMenu = () => {
-    setAnchorElNotifications(null);
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleSignUpClick = () => {
+    navigate('/register');
   };
 
   const renderNavItems = () => {
-    let pages = role === 'admin' ? [...userPages, ...adminPages] : userPages;
+    const pages = user?.userType === UserTypes.Admin ? [...userPages, ...adminPages] : userPages;
 
-    if (role === 'newUser') {
+    if (!user) {
       return null;
     }
 
@@ -77,10 +76,10 @@ const Navbar: React.FC<Props> = ({ role }) => {
           </Box>
           {renderNavItems()}
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            {role === 'newUser' ? (
+            {!user ? (
               <>
-                <Button color="inherit">Login</Button>
-                <Button color="inherit">Sign up</Button>
+                <Button color="inherit" onClick={handleLoginClick}>Login</Button>
+                <Button color="inherit" onClick={handleSignUpClick}>Sign up</Button>
               </>
             ) : (
               <>
@@ -156,5 +155,3 @@ const Navbar: React.FC<Props> = ({ role }) => {
     </Box>
   );
 }
-
-export default Navbar;

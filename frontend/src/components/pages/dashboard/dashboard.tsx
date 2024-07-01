@@ -1,7 +1,8 @@
 import React from 'react';
 import style from './dashboard.module.css';
 import { Grid } from '../../common/grid/grid';
-import Navbar from '../../common/pages/navbar';
+import { NavBar } from '../../common/pages/navbar';
+
 /**
  * Dashboard Page
  * @returns dashboard page element
@@ -9,9 +10,7 @@ import Navbar from '../../common/pages/navbar';
 export function Dashboard() {
   return (
     <>
-      {/* <Navbar role="admin" /> */}
-      {/* <Navbar role="newUser" /> */}
-      <Navbar role="existingUser" />
+      <NavBar />
       <div>
         <h1 className={style.dashboardTitle}>
           Example dashboard page!!!
