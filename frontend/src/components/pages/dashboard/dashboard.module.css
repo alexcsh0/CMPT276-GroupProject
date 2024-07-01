@@ -1,3 +1,40 @@
+.page {
+  background-color: rgb(234, 229, 229);
+}
+
 .dashboardTitle {
-  color: red;
+  color: darkorange;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+h2 {
+  text-align: center;
+  color: white;
+}
+
+h3, h4 {
+  text-align: center;
+}
+
+th, td {
+  padding: 5px 60px;
+  border: 1px solid black;
+  text-align: left;
+}
+
+.station {
+  margin: 2rem;
+  padding: 2rem;
+}
+
+.appbar {
+  background-color: #007CAD;
+}
+
+.container {
+  justify-content: center;
 }

@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ErrorPage } from './components/pages/error/error';
-import { Dashboard } from './components/pages/dashboard/dahsboard';
+import { Dashboard } from './components/pages/dashboard/dashboard';
 import { Login } from './components/pages/login/login';
 import { UserProvider } from './components/common/user-context/user-context';
 import { Register } from './components/pages/login/register';
