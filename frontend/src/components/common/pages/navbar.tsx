@@ -72,7 +72,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <DirectionsTransitIcon className={styles.logo} />
             <Typography variant="h6" component="div">
-              Transit App
+              Route Alert
             </Typography>
           </Box>
           {renderNavItems()}
@@ -84,7 +84,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
               </>
             ) : (
               <>
-                {role === 'existingUser' || role === 'admin' ? (
+                {/* {role === 'existingUser' || role === 'admin' ? (
                   <>
                     <Tooltip title="Alert Notifications">
                       <IconButton
@@ -120,7 +120,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
                       <MenuItem onClick={handleCloseNotificationsMenu}>Alert 3</MenuItem>
                     </Menu>
                   </>
-                ) : null}
+                ) : null} */}
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="User" src="/static/images/avatar/2.jpg" />
