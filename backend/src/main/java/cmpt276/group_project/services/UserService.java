@@ -1,12 +1,14 @@
 package cmpt276.group_project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cmpt276.group_project.models.User;
 import cmpt276.group_project.models.UserRepository;
 
 import java.util.List;
 
+@Service
 public class UserService {
     
     @Autowired
