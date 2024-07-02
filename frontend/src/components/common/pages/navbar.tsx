@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, Box, Button, MenuItem, Menu, Avatar, Tooltip, Badge } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Box, Button, MenuItem, Menu, Avatar, Tooltip, Badge, ButtonBase } from "@mui/material";
 import DirectionsTransitIcon from '@mui/icons-material/DirectionsTransit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useUser, UserTypes } from "../user-context/user-context";
@@ -41,6 +41,10 @@ export function NavBar() {
     navigate('/register');
   };
 
+  const handleHomeClick = () => {
+    navigate('/');
+  }
+
   const renderNavItems = () => {
     const pages = user?.userType === UserTypes.Admin ? [...userPages, ...adminPages] : userPages;
 
@@ -67,12 +71,14 @@ export function NavBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ bgcolor: '#1976d2' }}>
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <DirectionsTransitIcon sx={{ marginRight: 1 }} />
-            <Typography variant="h6" component="div">
-              Route Alert
-            </Typography>
-          </Box>
+          <ButtonBase onClick={handleHomeClick} sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <DirectionsTransitIcon sx={{ marginRight: 1 }} />
+              <Typography variant="h6" component="div">
+                Route Alert
+              </Typography>
+            </Box>
+          </ButtonBase>
           {renderNavItems()}
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
             {!user ? (
