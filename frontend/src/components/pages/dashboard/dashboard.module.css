@@ -16,11 +16,13 @@ h2 {
   color: white;
 }
 
-h3, h4 {
+h3,
+h4 {
   text-align: center;
 }
 
-th, td {
+th,
+td {
   padding: 5px 60px;
   border: 1px solid black;
   text-align: left;
