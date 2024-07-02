@@ -24,8 +24,11 @@
     cd frontend
     npm install
     ```
-4. Start the app (from root dir)
+
+4. npm install axios
+
+5. Start the app (from root dir)
     ```
     npm start
     ```
-5. Access app (http://localhost:3000)
+6. Access app (http://localhost:3000)
