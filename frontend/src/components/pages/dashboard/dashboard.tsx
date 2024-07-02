@@ -2,6 +2,7 @@ import React from 'react';
 import style from './dashboard.module.css';
 import { Grid, Box, } from "@mui/material";
 import { NavBar } from '../../common/pages/navbar';
+import { Footer } from '../../common/pages/footer';
 
 /**
  * Dashboard Page
@@ -181,6 +182,7 @@ export function Dashboard() {
           </Box>
         </Grid>
       </Grid>
+      <Footer />
     </div>
   )
 }
