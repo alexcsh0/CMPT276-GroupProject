@@ -2,7 +2,6 @@ import React from "react";
 import { AppBar, Toolbar, IconButton, Typography, Box, Button, MenuItem, Menu, Avatar, Tooltip, Badge } from "@mui/material";
 import DirectionsTransitIcon from '@mui/icons-material/DirectionsTransit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import styles from './navbar.module.css';
 import { useUser, UserTypes } from "../user-context/user-context";
 import { useNavigate } from "react-router-dom";
 
@@ -66,10 +65,10 @@ export function NavBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{ bgcolor: '#1976d2' }}>
         <Toolbar>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <DirectionsTransitIcon className={styles.logo} />
+            <DirectionsTransitIcon sx={{ marginRight: 1 }} />
             <Typography variant="h6" component="div">
               Route Alert
             </Typography>

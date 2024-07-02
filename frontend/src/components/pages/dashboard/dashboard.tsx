@@ -19,7 +19,7 @@ export function Dashboard() {
       <Grid container className={style.container}>
         {/* Buses schedule*/}
         <Grid item xs={2.2}>
-          <Box bgcolor="#007CAD" padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Upcoming Buses</h2>
+          <Box bgcolor='#1976d2' padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Upcoming Buses</h2>
             <Box bgcolor="gainsboro" padding={2}>
               <div className="Station">
                 <h4>R5 Hastings</h4>
@@ -77,7 +77,7 @@ export function Dashboard() {
 
         {/* Skytrain schedule*/}
         <Grid item xs={2.2}>
-          <Box bgcolor="#007CAD" padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Upcoming SkyTrains</h2>
+          <Box bgcolor='#1976d2' padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Upcoming SkyTrains</h2>
             <Box bgcolor="gainsboro" padding={2}>
               <div className="Station">
                 <h4>Expo Line</h4>
@@ -135,7 +135,7 @@ export function Dashboard() {
 
         {/* Calendar */}
         <Grid item xs={5.6}>
-          <Box bgcolor="#007CAD" padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Calendar</h2>
+          <Box bgcolor='#1976d2' padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Calendar</h2>
             <Box bgcolor="gainsboro" padding={2}>
               {/*<Calendar />*/}
 
@@ -145,7 +145,7 @@ export function Dashboard() {
 
         {/* Alert Box */}
         <Grid item xs={10}>
-          <Box bgcolor="#007CAD" padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Alert</h2>
+          <Box bgcolor='#1976d2' padding={3} margin={4} sx={{ border: 1, borderRadius: '6px' }}><h2>Alert</h2>
             <Box bgcolor="gainsboro" padding={2}>
               <Grid container>
                 <Grid item xs={3}>
