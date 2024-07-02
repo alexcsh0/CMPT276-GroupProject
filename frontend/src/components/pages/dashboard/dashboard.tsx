@@ -1,6 +1,7 @@
 import React from 'react';
 import style from './dashboard.module.css';
 import { Grid, Box, } from "@mui/material";
+import { NavBar } from '../../common/pages/navbar';
 
 /**
  * Dashboard Page
@@ -9,6 +10,7 @@ import { Grid, Box, } from "@mui/material";
 export function Dashboard() {
   return (
     <div className={style.page}>
+      <NavBar />
 
       <h3>Today's Date: {new Date().toLocaleDateString()}</h3>
       <h3>Current Time: 13:54</h3>
