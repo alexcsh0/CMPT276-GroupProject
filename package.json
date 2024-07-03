@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "concurrently \"npm:start-frontend\" \"npm:start-backend\"",
-    "start-frontend": "cd frontend && npm install && npm start",
-    "start-backend": "export JAVA_HOME=C:/Program Files/Java/jdk-22 && cd backend && ./mvnw spring-boot:run"
+    "start-frontend": "cd frontend && npm start",
+    "start-backend": "cd backend && mvnw spring-boot:run"
   }
 }
