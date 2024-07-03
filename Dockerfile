@@ -1,10 +1,11 @@
 FROM maven AS build
-WORKDIR /backend
-COPY backend /backend
+WORKDIR /app
+COPY backend /app
 RUN mvn clean package -DskipTests
+RUN ls -la /app/target
 
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /backend
-COPY --from=build /target/CMPT276-GroupProject-0.0.1-SNAPSHOT.jar CMPT276-GroupProject.jar
+COPY --from=build /app/target/group_project-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "CMPT276-GroupProject.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
