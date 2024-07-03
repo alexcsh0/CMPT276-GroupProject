@@ -5,7 +5,7 @@ import { type SelectChangeEvent } from '@mui/material';
  * @returns string for the api endpoint
  */
 export function getApiUrl() {
-  return process.env.REACT_APP_API_ENDPOINT ?? 'http://localhost:8090';
+  return process.env.REACT_APP_API_ENDPOINT ?? 'http://localhost:8080';
 }
 
 /**
