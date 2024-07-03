@@ -4,11 +4,12 @@
   "description": "Group project for CMPT 276",
   "main": "index.js",
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "concurrently \"npm:start-frontend\" \"npm:start-backend\"",
     "start-frontend": "cd frontend && npm start",
-    "start-backend": "cd backend && mvnw spring-boot:run"
+    "start-backend": "export JAVA_HOME=C:/Program Files/Java/jdk-22 && cd backend && ./mvnw spring-boot:run"
   }  
 }
