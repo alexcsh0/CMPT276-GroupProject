@@ -11,5 +11,6 @@
     "start": "concurrently \"npm:start-frontend\" \"npm:start-backend\"",
     "start-frontend": "cd frontend && npm start",
     "start-backend": "cd backend && mvnw spring-boot:run"
-  }
+  },
+  "proxy": "https://routealert-1sb5.onrender.com"  
 }
