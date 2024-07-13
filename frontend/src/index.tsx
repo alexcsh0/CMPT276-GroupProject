@@ -10,6 +10,7 @@ import { UserProvider } from './components/common/user-context/user-context';
 import { Register } from './components/pages/login/register';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { Logout } from './components/pages/login/logout';
+import { GetWeather } from './components/pages/weather/weather';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -35,6 +36,11 @@ const router = createBrowserRouter([
   {
     path: '/logout',
     element: <Logout />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/weather',
+    element: <GetWeather />,
     errorElement: <ErrorPage />
   }
 ]);
