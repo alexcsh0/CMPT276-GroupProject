@@ -10,6 +10,7 @@ import { UserProvider } from './components/common/user-context/user-context';
 import { Register } from './components/pages/login/register';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { Logout } from './components/pages/login/logout';
+import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -57,7 +58,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <UserProvider>
+        <SnackbarProvider>
           <RouterProvider router={router} />
+        </SnackbarProvider>
       </UserProvider>
     </ThemeProvider>
   </React.StrictMode>

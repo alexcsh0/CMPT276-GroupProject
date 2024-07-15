@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { useUser } from '../../common/user-context/user-context';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from '../../common/snackbar/snackbarContext';
 
 /**
  * Page for user login
@@ -25,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 export function Login() {
   const user = useUser();
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -50,6 +52,7 @@ export function Login() {
       });
       const { token, userType } = response.data;
       user.login(token, userType, rememberMe);
+      showSnackbar('Logged in as ' + username);
       navigate('/');
     } catch (error) {
       if ((error as any).response && (error as any).response.status === 401) {
