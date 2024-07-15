@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   getApiUrl,
+  getCheckboxChange,
   getHandleChange
 } from '../../../util/util';
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
+  FormControlLabel,
   Link,
   TextField,
   Typography
@@ -26,6 +29,7 @@ export function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +48,7 @@ export function Register() {
       await axios.post(`${getApiUrl()}/api/users/register`, {
         username,
         password,
-        userType: 0
+        userType: isAdmin ? 1 : 0
       }).then((response) => {
         try {
           const { token, userType } = response.data;
@@ -80,10 +84,10 @@ export function Register() {
       </Typography>
 
       {error
-      ? <Typography variant="body2" sx={{ color: 'red', mb: 2, fontSize: 16 }}>
+        ? <Typography variant="body2" sx={{ color: 'red', mb: 2, fontSize: 16 }}>
           {error}
         </Typography>
-      : null}
+        : null}
 
       <TextField
         label="Username"
@@ -112,6 +116,18 @@ export function Register() {
         required
         sx={{ mt: 2 }}
         disabled={loading}
+      />
+      <FormControlLabel
+        label="Sign up as Admin"
+        control={
+          <Checkbox
+            color="primary"
+            value={isAdmin}
+            checked={isAdmin}
+          />
+        }
+        onChange={getCheckboxChange(setIsAdmin)}
+        sx={{ mt: 1, textAlign: 'left' }}
       />
 
       <Button
