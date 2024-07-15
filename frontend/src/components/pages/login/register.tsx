@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   getApiUrl,
-  getCheckboxChange,
-  getHandleChange
+  getHandleChange,
+  getCheckboxChange
 } from '../../../util/util';
 import {
   Box,
@@ -33,6 +33,7 @@ export function Register() {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
     if (user.user) {
@@ -41,6 +42,18 @@ export function Register() {
   }, [user, navigate]);
 
   const handleRegister = async () => {
+    setSubmitAttempted(true);
+
+    if (!username || !password || !confirmedPassword) {
+      setError('All fields must be completed');
+      return;
+    }
+
+    if (password !== confirmedPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     if (loading) return;
     setLoading(true);
 
@@ -83,18 +96,14 @@ export function Register() {
         Create an account
       </Typography>
 
-      {error
-        ? <Typography variant="body2" sx={{ color: 'red', mb: 2, fontSize: 16 }}>
-          {error}
-        </Typography>
-        : null}
-
       <TextField
         label="Username"
         value={username}
         onChange={getHandleChange(setUsername)}
         fullWidth
         required
+        error={submitAttempted && !username}
+        helperText={submitAttempted && !username ? "Username is required" : ""}
         disabled={loading}
       />
       <TextField
@@ -104,6 +113,8 @@ export function Register() {
         onChange={getHandleChange(setPassword)}
         fullWidth
         required
+        error={submitAttempted && !password}
+        helperText={submitAttempted && !password ? "Password is required" : ""}
         sx={{ mt: 2 }}
         disabled={loading}
       />
@@ -111,9 +122,18 @@ export function Register() {
         label="Confirm Password"
         type="password"
         value={confirmedPassword}
-        onChange={getHandleChange(setConfirmedPassword)}
+        onChange={(e) => {
+          setConfirmedPassword(e.target.value);
+          if (password !== e.target.value) {
+            setError('Passwords do not match');
+          } else {
+            setError('');
+          }
+        }}
         fullWidth
         required
+        error={!!confirmedPassword && password !== confirmedPassword}
+        helperText={confirmedPassword && password !== confirmedPassword ? "Passwords do not match" : ""}
         sx={{ mt: 2 }}
         disabled={loading}
       />
@@ -124,9 +144,9 @@ export function Register() {
             color="primary"
             value={isAdmin}
             checked={isAdmin}
+            onChange={getCheckboxChange(setIsAdmin)}
           />
         }
-        onChange={getCheckboxChange(setIsAdmin)}
         sx={{ mt: 1, textAlign: 'left' }}
       />
 
@@ -136,6 +156,7 @@ export function Register() {
         color="primary"
         fullWidth
         sx={{ mt: 2 }}
+        disabled={loading || !username || !password || !confirmedPassword || password !== confirmedPassword}
       >
         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Register'}
       </Button>

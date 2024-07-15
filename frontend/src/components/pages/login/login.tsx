@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   getApiUrl,
-  getCheckboxChange,
-  getHandleChange
+  getHandleChange,
+  getCheckboxChange
 } from '../../../util/util';
 import {
   Box,
@@ -44,26 +44,23 @@ export function Login() {
     setLoading(true);
 
     try {
-      await axios.post(`${getApiUrl()}/api/users/login`, {
+      const response = await axios.post(`${getApiUrl()}/api/users/login`, {
         username,
         password
-      }).then((response) => {
-        try {
-          const { token, userType } = response.data;
-          user.login(token, userType, rememberMe);
-          navigate('/');
-        } catch (error) {
-          setError('Invalid username or password');
-        }
       });
+      const { token, userType } = response.data;
+      user.login(token, userType, rememberMe);
+      navigate('/');
     } catch (error) {
-      setError(
-        'Sorry, there is an issue connecting to the server at the moment. Please try again later'
-      );
+      if ((error as any).response && (error as any).response.status === 401) {
+        setError('Incorrect username or password. Please try again.');
+      } else {
+        setError('Sorry, there is an issue connecting to the server at the moment. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <Box
@@ -81,11 +78,11 @@ export function Login() {
         Sign In
       </Typography>
 
-      {error
-      ? <Typography variant="body2" sx={{ color: 'red', mb: 2, fontSize: 16 }}>
+      {error && (
+        <Typography variant="body2" sx={{ color: 'red', mb: 2, fontSize: 16 }}>
           {error}
         </Typography>
-      : null}
+      )}
 
       <TextField
         label="Username"
@@ -112,9 +109,9 @@ export function Login() {
             color="primary"
             value={rememberMe}
             checked={rememberMe}
+            onChange={() => setRememberMe(!rememberMe)}
           />
         }
-        onChange={getCheckboxChange(setRememberMe)}
         sx={{ mt: 1, textAlign: 'left' }}
       />
 
@@ -124,6 +121,7 @@ export function Login() {
         color="primary"
         fullWidth
         sx={{ mt: 2 }}
+        disabled={loading || !username || !password}
       >
         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Login'}
       </Button>
