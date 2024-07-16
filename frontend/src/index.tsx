@@ -11,6 +11,8 @@ import { Register } from './components/pages/login/register';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { Logout } from './components/pages/login/logout';
 import { GetWeather } from './components/pages/weather/weather';
+import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
+import { AlertForm } from './components/pages/alerts/alertsForm';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -42,6 +44,11 @@ const router = createBrowserRouter([
     path: '/weather',
     element: <GetWeather />,
     errorElement: <ErrorPage />
+  },
+  {
+    path: '/alerts',
+    element: <AlertForm />,
+    errorElement: <ErrorPage />
   }
 ]);
 
@@ -63,7 +70,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <UserProvider>
+        <SnackbarProvider>
           <RouterProvider router={router} />
+        </SnackbarProvider>
       </UserProvider>
     </ThemeProvider>
   </React.StrictMode>
