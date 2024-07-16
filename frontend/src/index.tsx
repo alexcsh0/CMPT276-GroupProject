@@ -11,6 +11,7 @@ import { Register } from './components/pages/login/register';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { Logout } from './components/pages/login/logout';
 import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
+import { AlertForm } from './components/pages/alerts/alertsForm';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
   {
     path: '/logout',
     element: <Logout />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/alerts',
+    element: <AlertForm />,
     errorElement: <ErrorPage />
   }
 ]);
