@@ -33,7 +33,7 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         <SnackbarContext.Provider value={{ showSnackbar }}>
             {children}
             <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 open={snackbarState.open}
                 onClose={handleClose}
                 message={snackbarState.message}
