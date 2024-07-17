@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ErrorPage } from './components/pages/error/error';
 import { Dashboard } from './components/pages/dashboard/dashboard';
+import { GetRoutes } from './components/pages/routes/routes';
 import { Login } from './components/pages/login/login';
 import { UserProvider } from './components/common/user-context/user-context';
 import { Register } from './components/pages/login/register';
@@ -35,6 +36,11 @@ const router = createBrowserRouter([
   {
     path: '/logout',
     element: <Logout />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/routes',
+    element: <GetRoutes />,
     errorElement: <ErrorPage />
   }
 ]);
