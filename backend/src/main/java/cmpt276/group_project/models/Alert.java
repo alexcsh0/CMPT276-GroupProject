@@ -1,74 +1,41 @@
 package cmpt276.group_project.models;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table(name = "alerts")
 public class Alert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String affectedService;
-
-    @Column(nullable = false)
+    private Long id;
     private String message;
+    private String type; // 例如，信息类型：info, warning, error等
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    // constructors
-    public Alert() {
-    }
-
-    public Alert(String title, String affectedService, String message) {
-        this.title = title;
-        this.affectedService = affectedService;
-        this.message = message;
-        this.createdAt = LocalDateTime.now();
-    }
-
-    // getters
-    public int getId() {
+    // Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAffectedService() {
-        return affectedService;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    // setters
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAffectedService(String affectedService) {
-        this.affectedService = affectedService;
-    }
-
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
