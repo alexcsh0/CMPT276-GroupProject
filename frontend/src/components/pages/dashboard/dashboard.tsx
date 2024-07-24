@@ -79,13 +79,19 @@ export function Dashboard() {
             </Typography>
             <Typography>No upcoming skytrains found.</Typography>
           </Paper>
+        </Box>
 
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems={'center'}
+          marginTop={6}
+        >
           <Paper
             style={{
               flex: 1,
               height: 600,
-              minWidth: 375,
-              maxWidth: 500,
+              minWidth: 1016,
               overflowY: 'auto'
             }}
           >
