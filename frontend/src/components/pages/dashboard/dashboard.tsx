@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import style from './dashboard.module.css';
-import { Box, Paper, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Box, Paper, Typography } from '@mui/material';
 import { NavBar } from '../../common/navbar/navbar';
 import { Footer } from '../../common/footer/footer';
 import axios from 'axios';
 import AlertCard from '../../alerts/alertCard';
 import { getApiUrl } from '../../../util/util';
 import { useUser } from '../../common/user-context/user-context';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface Alert {
   id: number;
@@ -51,13 +52,15 @@ export function Dashboard() {
           flexWrap="wrap"
           justifyContent="center"
           gap={8}
+
         >
           <Paper
             style={{
               flex: 1,
               height: 600,
               minWidth: 375,
-              maxWidth: 500
+              maxWidth: 500,
+              border: '1px solid black'
             }}
           >
             <Typography variant="h4" color="primary">
@@ -71,7 +74,8 @@ export function Dashboard() {
               flex: 1,
               height: 600,
               minWidth: 375,
-              maxWidth: 500
+              maxWidth: 500,
+              border: '1px solid black'
             }}
           >
             <Typography variant="h4" color="primary">
@@ -92,19 +96,36 @@ export function Dashboard() {
               flex: 1,
               height: 600,
               minWidth: 1016,
-              overflowY: 'auto'
+              overflowY: 'auto',
+              border: '1px solid black'
             }}
           >
             <Typography variant="h4" color="primary">
               Alerts
             </Typography>
-            {alerts.length > 0 ? (
-              alerts.map(alert => (
-                <AlertCard key={alert.id} {...alert} />
-              ))
-            ) : (
-              <Typography>No current alerts.</Typography>
-            )}
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography>Custom Alerts</Typography>
+              </AccordionSummary>
+
+              {alerts.length > 0 ? (
+                alerts.map(alert => (
+                  <AlertCard key={alert.id} {...alert} />
+                ))
+              ) : (
+                <Typography>No current alerts.</Typography>
+              )}
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography>Official Translink Alerts</Typography>
+              </AccordionSummary>
+              <Typography>No Translink alerts...TODO: implement this with Translink API</Typography>
+            </Accordion>
           </Paper>
         </Box>
       </div>
