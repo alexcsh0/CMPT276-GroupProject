@@ -28,7 +28,7 @@ public class UserController {
             return ResponseEntity.status(409).body("Username already exists");
         }
         String token = jwtUtil.generateToken(registeredUser.getUsername());
-        return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUserType()));
+        return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUserType(), registeredUser.getUsername()));
     }
     
     //logs in user and returns token and user type if successful
@@ -39,7 +39,7 @@ public class UserController {
             user.getUsername(), user.getPassword());
         if (loggedInUser != null) {
             String token = jwtUtil.generateToken(loggedInUser.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token, loggedInUser.getUserType()));
+            return ResponseEntity.ok(new AuthResponse(token, loggedInUser.getUserType(), loggedInUser.getUsername()));
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
@@ -52,7 +52,7 @@ public class UserController {
         User user = userService.getUser(username);
         boolean isValid = jwtUtil.validateToken(token, username);
         if (isValid) {
-            return ResponseEntity.ok(new AuthResponse(token, user.getUserType()));
+            return ResponseEntity.ok(new AuthResponse(token, user.getUserType(), user.getUsername()));
         }
         return ResponseEntity.status(401).body("Invalid token");
     }
@@ -62,10 +62,12 @@ public class UserController {
     static class AuthResponse {
         private String token;
         private int userType;
+        private String username;
 
-        public AuthResponse(String token, int userType) {
+        public AuthResponse(String token, int userType, String username) {
             this.token = token;
             this.userType = userType;
+            this.username = username;
         }
 
         //getters and setters
@@ -77,12 +79,20 @@ public class UserController {
             return userType;
         }
 
+        public String getUsername() {
+            return username;
+        }
+
         public void setUserType(int userType) {
             this.userType = userType;
         }
 
         public void setToken(String token) {
             this.token = token;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
         }
     }
 }

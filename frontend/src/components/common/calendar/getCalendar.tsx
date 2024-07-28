@@ -4,6 +4,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { Container, Typography, Box } from '@mui/material';
+import { useUser } from '../user-context/user-context';
 
 const API_KEY = 'AIzaSyD5QwAHagdbf8yPSnOQSSZvvOjtvlLcZZI';
 const CALENDAR_ID = '7e5ced2731588593e3d8e9e0e9ecf1d18d97bf982dce8e9130ae0a320685c6ae@group.calendar.google.com';
@@ -12,6 +13,8 @@ const localizer = momentLocalizer(moment);
 
 const PublicCalendar: React.FC = () => {
   const [events, setEvents] = useState<any[]>([]);
+  const { user } = useUser();
+  console.log("Username: ", user?.username);
 
   const getPublicCalendarEvents = async () => {
     try {

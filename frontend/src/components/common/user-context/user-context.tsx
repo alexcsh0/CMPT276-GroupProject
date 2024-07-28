@@ -12,11 +12,12 @@ export enum UserTypes {
 export interface UserObject {
   token: string
   userType: UserTypes
+  username: string
 };
 
 interface UserContextType {
   user: UserObject | null
-  login: (token: string, userType: UserTypes, rememberMe: boolean) => void
+  login: (token: string, userType: UserTypes, username: string, rememberMe: boolean) => void
   logout: () => void
   loading: boolean
 }
@@ -44,8 +45,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           await axios.post(`${getApiUrl()}/api/users/validate`, token)
             .then((response) => {
               try {
-                const { token, userType } = response.data;
-                setUser({ token, userType });
+                const { token, userType, username } = response.data;
+                setUser({ token, userType, username });
               } catch (error) {
                 localStorage.removeItem(tokenTitle);
                 setUser(null);
@@ -66,8 +67,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     void checkExistingToken();
   }, []);
 
-  const login = (token: string, userType: UserTypes, rememberMe: boolean) => {
-    setUser({ token, userType });
+  const login = (token: string, userType: UserTypes, username: string, rememberMe: boolean) => {
+    setUser({ token, userType, username });
     if (rememberMe) {
       localStorage.setItem(tokenTitle, token);
     }
