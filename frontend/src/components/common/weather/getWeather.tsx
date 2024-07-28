@@ -75,7 +75,7 @@ const Weather: React.FC = () => {
                         time,
                         temperature: vancouverHourly.temperature_2m[index],
                     })).slice(currentHour, currentHour + 12);
-                
+
                 //set hourly weather data for burnaby
                 const burnabyHourly = burnabyResponse.data.hourly;
                 const burnaby12Hours = burnabyHourly.time
@@ -83,7 +83,7 @@ const Weather: React.FC = () => {
                         time,
                         temperature: burnabyHourly.temperature_2m[index],
                     })).slice(currentHour, currentHour + 12);
-                
+
                 //set hourly weather data for coquitlam
                 const coquitlamHourly = coquitlamResponse.data.hourly;
                 const coquitlam12Hours = coquitlamHourly.time
@@ -91,7 +91,7 @@ const Weather: React.FC = () => {
                         time,
                         temperature: coquitlamHourly.temperature_2m[index],
                     })).slice(currentHour, currentHour + 12);
-                
+
                 //set hourly weather data for surrey
                 const surreyHourly = surreyResponse.data.hourly;
                 const surrey12Hours = surreyHourly.time
