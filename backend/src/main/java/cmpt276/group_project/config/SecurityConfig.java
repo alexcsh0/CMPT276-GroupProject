@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/users/**",
                                 "/api/alerts/**",
-                                "/api/calendar/**")
+                                "/api/calendars/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated());

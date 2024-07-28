@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/api/calendar")
+@RequestMapping("/api/calendars")
 public class CalendarController {
 
     @Autowired
