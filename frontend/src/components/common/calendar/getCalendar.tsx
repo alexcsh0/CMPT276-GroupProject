@@ -1,67 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import moment from 'moment';
 import { Container, Typography, Box } from '@mui/material';
 import { useUser } from '../user-context/user-context';
-
-const API_KEY = 'AIzaSyD5QwAHagdbf8yPSnOQSSZvvOjtvlLcZZI';
-const CALENDAR_ID = '7e5ced2731588593e3d8e9e0e9ecf1d18d97bf982dce8e9130ae0a320685c6ae@group.calendar.google.com';
-
-const localizer = momentLocalizer(moment);
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import {
+  getApiUrl,
+  getHandleChange
+} from '../../../util/util';
 
 const PublicCalendar: React.FC = () => {
-  const [events, setEvents] = useState<any[]>([]);
   const { user } = useUser();
-  console.log("Username: ", user?.username);
+  const [title, setTitle] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  let username: string | null = null;
+  if (user) {
+    username = user.username;
+  } else {
+    username = null;
+  }
 
-  const getPublicCalendarEvents = async () => {
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleAddEvent = async () => {
+    if (loading) return;
+    setLoading(true);
+
     try {
-      const response = await axios.get(
-        `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${API_KEY}`
-      );
-      return response.data.items.map((event: any) => ({
-        title: event.summary,
-        start: new Date(event.start.dateTime || event.start.date),
-        end: new Date(event.end.dateTime || event.end.date),
-      }));
+      if (username == null) throw error;
+      const response = await axios.post(`${getApiUrl()}/api/calendar/add`, {
+        username,
+        title,
+        start,
+        end
+      });
+      if (response.status === 200) {
+        console.log("EVENT ADDED SUCC");
+      }
     } catch (error) {
-      console.error('Error fetching calendar events:', error);
-      return [];
+      if (username == null) {
+        setError('Please log in to add an event');
+      } else {
+        setError('Error adding event');
+      }
+    } finally {
+      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const events = await getPublicCalendarEvents();
-      setEvents(events);
-    };
-
-    fetchEvents();
-  }, []);
-
+  }
+  
   return (
-    <Container>
-      <Box mt={4}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Upcoming Service Disruptions
-          <br/>
-          Today's Date: {new Date().toLocaleDateString()}
-          <br/>
-          Current Time: {new Date().toLocaleTimeString()}
-        </Typography>
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
+    <div>
+      <FullCalendar
+        plugins={[dayGridPlugin]}
+        initialView="dayGridMonth"
+        events={[
+          { title: 'event 1', date: '2024-07-01' },
+          { title: 'event 2', date: '2024-07-02' }
+        ]}
+      />
+
+      <form onSubmit = {handleAddEvent} style = {{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
+        <input
+          type = "text"
+          name = "title"
+          value = {title}
+          onChange = {getHandleChange(setTitle)}
+          placeholder = "Event Title"
+          required
         />
-      </Box>
-    </Container>
+        <input
+          type = "date"
+          name = "start"
+          value = {start}
+          onChange = {getHandleChange(setStart)}
+          required
+        />
+        <input
+          type = "date"
+          name = "end"
+          value = {end}
+          onChange = {getHandleChange(setEnd)}
+          required
+        />
+        <button type = "submit">Add Event</button>
+      </form>
+    </div>
   );
-};
+}
 
 export default PublicCalendar;
 

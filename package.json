@@ -4,6 +4,8 @@
   "description": "Group project for CMPT 276",
   "main": "index.js",
   "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "concurrently": "^8.2.2",
     "moment": "^2.30.1",
     "react-big-calendar": "^1.13.1",
