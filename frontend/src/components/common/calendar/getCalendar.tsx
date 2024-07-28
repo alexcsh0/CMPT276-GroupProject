@@ -8,9 +8,14 @@ import {
   getApiUrl,
   getHandleChange
 } from '../../../util/util';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from '../../common/snackbar/snackbarContext';
 
 const PublicCalendar: React.FC = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
+
   const [title, setTitle] = useState('');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
@@ -30,15 +35,19 @@ const PublicCalendar: React.FC = () => {
 
     try {
       if (username == null) throw error;
-      const response = await axios.post(`${getApiUrl()}/api/calendar/add`, {
+      await axios.post(`${getApiUrl()}/api/calendar/add`, {
         username,
         title,
         start,
         end
+      }, {
+        headers: {
+            'Authorization': `Bearer ${user?.token}`
+        }
+      }).then(() => {
+        navigate('/calendar');
+        showSnackbar('Event created successfully.');
       });
-      if (response.status === 200) {
-        console.log("EVENT ADDED SUCC");
-      }
     } catch (error) {
       if (username == null) {
         setError('Please log in to add an event');
@@ -57,7 +66,8 @@ const PublicCalendar: React.FC = () => {
         initialView="dayGridMonth"
         events={[
           { title: 'event 1', date: '2024-07-01' },
-          { title: 'event 2', date: '2024-07-02' }
+          { title: 'event 2', start: '2024-07-02', end: '2024-07-03' },
+          { title: 'event 3', start: '2024-07-05', end: '2024-07-08' },
         ]}
       />
 
