@@ -14,6 +14,7 @@ import { Logout } from './components/pages/login/logout';
 import { GetWeather } from './components/pages/weather/weather';
 import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
 import { AlertForm } from './components/pages/alerts/alertsForm';
+import { SettingsForm } from './components/pages/settings/settingsForm';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -54,6 +55,11 @@ const router = createBrowserRouter([
   {
     path: '/alerts',
     element: <AlertForm />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/settings',
+    element: <SettingsForm />,
     errorElement: <ErrorPage />
   }
 ]);

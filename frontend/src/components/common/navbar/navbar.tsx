@@ -17,7 +17,7 @@ import { useUser, UserTypes } from '../user-context/user-context';
 
 const userPages = ['Calendar', 'Routes', 'Weather'];
 const adminPages = ['Alerts', 'Schedule'];
-const settings = ['Profile', 'Settings', 'Logout'];
+const settings = ['Settings', 'Logout'];
 
 /**
  * Project-wide navigation bar
@@ -103,7 +103,7 @@ export function NavBar() {
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Link
-                      href={`/${setting.toLowerCase()}`}
+                      href="/settings"
                       underline="none"
                       sx={{
                         color: 'black',
