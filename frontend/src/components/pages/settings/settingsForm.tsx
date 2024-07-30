@@ -17,7 +17,6 @@ export function SettingsForm() {
     const { showSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -27,8 +26,9 @@ export function SettingsForm() {
 
     const handleChangePassword = async () => {
         setSubmitAttempted(true);
+        setError('');
 
-        if (!username || !currentPassword || !newPassword || !confirmNewPassword) {
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
             setError('All fields must be completed');
             return;
         }
@@ -41,23 +41,31 @@ export function SettingsForm() {
         if (loading) return;
         setLoading(true);
 
+        const token = user?.token.trim();
+        console.log(token);
+
         try {
-            await axios.post(`${getApiUrl()}/api/users/settings/change-password`, {
-                username,
+
+            let token = user?.token.trim();
+
+            if (token?.endsWith('=')) {
+                token.slice(0, -1);
+            }
+
+            await axios.put(`${getApiUrl()}/api/users/settings/change-password`, {
                 oldPassword: currentPassword,
                 newPassword: newPassword,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${user?.token}`
+                    'Authorization': `Bearer ${token}`
                 }
-            }).then((response) => {
-                setUsername('');
+            }).then(() => {
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmNewPassword('');
                 setError('');
-                showSnackbar('Password changed successfully.');
                 navigate('/');
+                showSnackbar('Password changed successfully.');
             });
         } catch (error) {
             setError('Invalid credentials or error processing request.');
@@ -82,15 +90,6 @@ export function SettingsForm() {
                 Change Password
             </Typography>
 
-            <TextField
-                label="Username"
-                value={username}
-                onChange={getHandleChange(setUsername)}
-                fullWidth
-                required
-                disabled={loading}
-                sx={{ mt: 2 }}
-            />
             <TextField
                 label="Current Password"
                 type="password"

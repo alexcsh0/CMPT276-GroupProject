@@ -4,9 +4,13 @@ import cmpt276.group_project.models.User;
 import cmpt276.group_project.services.UserService;
 import cmpt276.group_project.config.JWT;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,6 +21,9 @@ public class UserController {
 
     @Autowired
     private JWT jwtUtil;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     // registers user and returns token and user type
     // if username already exists, returns "Username already exists"
@@ -58,14 +65,24 @@ public class UserController {
     }
 
     // changes user password for settings page
-    @PostMapping("/settings/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
-        boolean changed = userService.changePassword(request.getUsername(), request.getOldPassword(),
-                request.getNewPassword());
-        if (changed) {
-            return ResponseEntity.ok("Password changed successfully");
+    @PutMapping("/settings/change-password")
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token,
+            @RequestBody PasswordChangeRequest request) {
+        String username = jwtUtil.extractUsername(token);
+        if (username == null) {
+            return ResponseEntity.status(401).body("Invalid token.");
         }
-        return ResponseEntity.status(401).body("Invalid credentials");
+
+        User user = userService.getUser(username);
+        if (user == null || !passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            return ResponseEntity.status(403).body("Invalid credentials.");
+        }
+
+        boolean success = userService.changePassword(username, request.getOldPassword(), request.getNewPassword());
+        if (success) {
+            return ResponseEntity.ok("Password changed successfully.");
+        }
+        return ResponseEntity.status(403).body("Password change failed.");
     }
 
     // response class for token
@@ -97,20 +114,22 @@ public class UserController {
         }
     }
 
-    // Request class for change password
-    static class ChangePasswordRequest {
-        private String username;
+    // inner class for password change request
+    static class PasswordChangeRequest {
         private String oldPassword;
         private String newPassword;
 
-        public String getUsername() {
-            return username;
+        // Default constructor
+        public PasswordChangeRequest() {
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        // Parameterized constructor
+        public PasswordChangeRequest(String oldPassword, String newPassword) {
+            this.oldPassword = oldPassword;
+            this.newPassword = newPassword;
         }
 
+        // Getters and setters
         public String getOldPassword() {
             return oldPassword;
         }
