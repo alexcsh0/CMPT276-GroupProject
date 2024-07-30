@@ -38,6 +38,26 @@ export function Dashboard() {
     fetchAlerts();
   }, [user?.token]);
 
+  const [offAlerts, setOffAlerts] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        const response = await axios.post(`${getApiUrl()}/api/alerts/offAlerts`, {
+          headers: {
+            'Authorization': `Bearer ${user?.token}`
+          }
+        });
+        console.log(response.data)
+        setOffAlerts(response.data);
+      } catch (error) {
+        console.error("Error fetching alerts", error);
+      }
+    };
+
+    fetchAlerts();
+  }, [user?.token]);
+
   return (
     <>
       <NavBar />
@@ -122,9 +142,16 @@ export function Dashboard() {
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
               >
-                <Typography>Official Translink Alerts</Typography>
+                <Typography>Official Alerts</Typography>
               </AccordionSummary>
-              <Typography>No Translink alerts...TODO: implement this with Translink API</Typography>
+
+              {offAlerts.length > 0 ? (
+                offAlerts.map(alert => (
+                  <AlertCard key={alert.title} {...alert} />
+                ))
+              ) : (
+                <Typography>No current official alerts.</Typography>
+              )}
             </Accordion>
           </Paper>
         </Box>
