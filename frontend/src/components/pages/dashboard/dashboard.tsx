@@ -144,6 +144,7 @@ export function Dashboard() {
               >
                 <Typography>Official Alerts</Typography>
               </AccordionSummary>
+              
               {offAlerts.length > 0 ? (
                 offAlerts.map(alert => (
                   <AlertCard key={alert.title} {...alert} />
