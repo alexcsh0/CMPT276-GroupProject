@@ -65,6 +65,7 @@ export function Register() {
       }).then((response) => {
         try {
           const { token, userType } = response.data;
+          console.log(token);
           user.login(token, userType, true);
           navigate('/');
         } catch (error) {

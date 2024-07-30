@@ -23,8 +23,8 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType>({
   user: null,
-  login: () => {},
-  logout: () => {},
+  login: () => { },
+  logout: () => { },
   loading: true
 });
 
@@ -67,7 +67,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (token: string, userType: UserTypes, rememberMe: boolean) => {
-    setUser({ token, userType });
+    const trimmedToken = token.trim();
+    setUser({ token: trimmedToken, userType });
     if (rememberMe) {
       localStorage.setItem(tokenTitle, token);
     }
