@@ -142,7 +142,7 @@ export function Dashboard() {
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
               >
-                <Typography>Official Translink Alerts</Typography>
+                <Typography>Official Alerts</Typography>
               </AccordionSummary>
               {offAlerts.length > 0 ? (
                 offAlerts.map(alert => (

@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
+import java.util.LinkedList;
 import java.util.List;
 
 import java.net.URL;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
-
 
 @RestController
 @RequestMapping("/api/alerts")
