@@ -2,6 +2,7 @@ package cmpt276.group_project.controllers;
 
 import cmpt276.group_project.models.Alert;
 import cmpt276.group_project.services.AlertService;
+import cmpt276.group_project.models.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Optional;
+
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 
@@ -41,5 +48,37 @@ public class AlertController {
             res.add(alert);
         }
         return res;
+    }
+
+    @PostMapping("addEvent")
+    public Optional<Calendar> offEvent() throws Exception {
+        URL url = new URL("https://gtfsapi.translink.ca/v3/gtfsalerts?apikey=T3i6sh8RnDcRGi4Y2yVF");
+        FeedMessage feed = FeedMessage.parseFrom(url.openStream());
+        //List<Calendar> res = new LinkedList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (FeedEntity entity : feed.getEntityList()) {
+            if (entity.getAlert().getActivePeriodCount() > 0 && entity.getAlert().getActivePeriod(0).getEnd() > 0) {
+                String header = entity.getAlert().getHeaderText().toString();
+                String startDate = null;
+                String endDate = null;
+                
+                long startSeconds = entity.getAlert().getActivePeriod(0).getStart();
+                long endSeconds = entity.getAlert().getActivePeriod(0).getEnd();
+
+                LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(startSeconds), ZoneId.systemDefault());
+                LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(endSeconds), ZoneId.systemDefault());
+
+                startDate = startDateTime.format(formatter);
+                endDate = endDateTime.format(formatter);
+
+                if (!startDate.equals(endDate)) {
+                    Calendar event = new Calendar("Translink", header, startDate, endDate);
+                    //res.add(event);
+                    return Optional.of(event);
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -96,47 +96,43 @@ const PublicCalendar: React.FC = () => {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await axios.get('https://gtfsapi.translink.ca/v3/gtsfsalerts', {
-          params: {
-            apiKey: '39f1gVaThmCptnXKyE5d',
-          },
+        const response = await axios.post(`${getApiUrl()}/api/alerts/addEvent`, {
           headers: {
-            'Accept': 'application/json'
+            'Authorization': `Bearer ${user?.token}`
           }
         });
-        const alerts = response.data.filter((alert: any) =>
-          alert.Description.includes('Expo Line') || alert.Summary.includes('Expo Line'));
-        const alertEvents = alerts.map((alert: any) => ({
+        const alert = response.data;
+        const alertEvent = {
           username: 'TransLink',
-          title: alert.alertName,
+          title: alert.title,
           start: alert.startDate,
-          end: alert.endDate
-        }));
-        setAlerts(alertEvents);
+          end: alert.endDate,
+        };
+
+        setAlerts([alertEvent]);
+
+        // const fetchedEvents = response.data.map((alert: Event) => ({
+        //   username: 'TransLink',
+        //   title: alert.title,
+        //   start: alert.start,
+        //   end: alert.end,
+        // }));
+
+        // setAlerts(fetchedEvents);
       } catch (error) {
         console.error('Error fetching translink alerts', error);
       }
     };
 
     fetchAlerts();
-  }, []);
-
-  <FullCalendar
-    plugins={[dayGridPlugin]}
-    initialView="dayGridMonth"
-    events={[...userEvents, ...alerts]}
-  />
+  }, [user?.token]);
   
   return (
     <div>
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        events={userEvents.map(event => ({
-          title: event.title,
-          start: event.start,
-          end: event.end
-        }))}
+        events={alerts}
       />
 
       <Box
