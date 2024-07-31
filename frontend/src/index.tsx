@@ -12,6 +12,7 @@ import { Register } from './components/pages/login/register';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { Logout } from './components/pages/login/logout';
 import { GetWeather } from './components/pages/weather/weather';
+import { GetCalendar } from './components/pages/calendar/calendar';
 import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
 import { AlertForm } from './components/pages/alerts/alertsForm';
 
@@ -54,6 +55,11 @@ const router = createBrowserRouter([
   {
     path: '/alerts',
     element: <AlertForm />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/calendar',
+    element: <GetCalendar />,
     errorElement: <ErrorPage />
   }
 ]);

@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/users/**",
-                                "/api/alerts/**")
+                                "/api/alerts/**",
+                                "/api/calendars/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated());
