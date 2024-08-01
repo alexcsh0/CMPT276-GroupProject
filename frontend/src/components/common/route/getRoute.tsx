@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useMemo, useRef } from 'react';
-import { Switch } from "@mui/material";
+import axios from 'axios';
+import ky from 'ky'
+import { Switch, CircularProgress } from "@mui/material";
 import {
     Box,
     Button,
@@ -10,6 +12,11 @@ import {
     Input,
     Text,
 } from '@chakra-ui/react';
+import {
+    getApiUrl,
+    getHandleChange,
+    getCheckboxChange
+  } from '../../../util/util';
 import Styles from './getRoute.module.css';
 import {
     GoogleMap,
@@ -20,14 +27,20 @@ import { VscChromeClose } from 'react-icons/vsc';
 import {
     FaHome,
 } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../common/user-context/user-context';
+import { Success } from '../../pages/routes/success'
 
 
 type latLngLiteral = google.maps.LatLngLiteral;
 type DirectionsResult = google.maps.DirectionsResult;
 type Map = google.maps.Map;
 
-export function GetRoute() {
-
+export function GetRoute() { 
+    
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
     const startingPosition = useMemo<latLngLiteral>(() => ({ lat: 49.18757324981386, lng: -122.84972643059662 }), []);
     const [map, setMap] = useState<Map | null>((null));
     const [directionsResponse, setDirectionsResponse] = useState<DirectionsResult | null>(null);
@@ -36,7 +49,75 @@ export function GetRoute() {
     const originRef = useRef<HTMLInputElement>(null);
     const destinationRef = useRef<HTMLInputElement>(null);
     const [checked, setChecked] = useState(false);
+    const [checkedSavedRoutes, setCheckedSavedRoutes] = useState(false);
     const [shown, isShown] = useState(false);
+
+    const { user } = useUser();
+    let username: string | null = null;
+    if (user) {
+        username = user.username;
+    } else {
+        username = null;
+    }
+
+    const handleSaveRoute = async () => {
+        const origin = originRef.current?.value;
+        const destination = destinationRef.current?.value;
+
+        if (!(origin) || !(destination)) {
+            setError('All fields must be completed');
+            console.log(error);
+            return;
+        }
+
+        if (loading) return;
+        setLoading(true);
+
+        console.log(origin);
+        console.log(destination);
+
+        // Step 0: Check if logged in
+        try {
+            if (username == null) throw error;
+            // Step 1: Add route to database if database does not contain route
+            await axios.post(`${getApiUrl()}/api/routes/addRoute`, {
+                origin,
+                destination
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${user?.token}`
+                }
+            }).then((response) => {
+                console.log(response.data);
+                const { routeId } = response.data;
+                
+                // Step 2: Link relation between route and user table, and save the route on current account
+                try {
+                    axios.post(`${getApiUrl()}/api/users/saveRoute/{username}/{routeId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${user?.token}`
+                        }
+                    });
+                    // Step 3: Show success page
+                    <Success />
+                    navigate('/success');
+
+                } catch (error) {
+                    setError('Error: Unable to save this route to your account');
+                }
+            });
+        } catch (error) {
+            if (username == null) {
+                setError('log in to save routes');
+                console.log(error);
+            } else {
+                setError('Invalid origin or destination');
+                console.log(error);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
 
     async function calculateRoute() {
         if (originRef.current!.value === '' || destinationRef.current!.value === ' ') {
@@ -112,20 +193,129 @@ export function GetRoute() {
         }
     }
 
+    const handleDisplayEvent = async() => {
+        setCheckedSavedRoutes(!checkedSavedRoutes);
+
+        try {
+            if (username == null) throw error;
+            if (!checkedSavedRoutes) {
+                // Get number of saved routes
+                let amountOfSavedRoutes = 0;
+                await axios.get(`${getApiUrl()}/api/users/getRoutesAmount/{username}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user?.token}`
+                    }
+                }).then((response) => {
+                    window.location.reload()
+                    const [ amount ] = response.data;
+                    amountOfSavedRoutes = amount;
+                })
+                console.log(amountOfSavedRoutes + "Routes");
+                // In a for loop, get each route and display on route page
+                let origin: string = "";
+                let destination: string = "";
+                for (let i = 0; i < amountOfSavedRoutes; i++) {
+                    await axios.post(`${getApiUrl()}/api/users/getRoutesOrigin/{username}/{i}`, {
+                        headers: {
+                            'Authorization': `Bearer ${user?.token}`
+                        }
+                    }).then((response) => {
+                        const [ routeOrigin ] = response.data;
+                        origin = routeOrigin;
+                    });
+                    await axios.post(`${getApiUrl()}/api/users/getRoutesDestination/{username}/{i}`, {
+                        headers: {
+                            'Authorization': `Bearer ${user?.token}`
+                        }
+                    }).then((response) => {
+                        const [ routeDestination ] = response.data;
+                        destination = routeDestination;
+                    })
+                    showSavedRoutes(origin, destination, i);
+                }
+            }
+            else {
+                let savedRoutes = document.getElementById("savedRoutes");
+                savedRoutes!.innerHTML = "";
+            }
+        } catch (error) {
+            if (username == null) {
+                setError('log in to see saved routes');
+                console.log(error);
+            } else {
+                setError('Error');
+                console.log(error);
+            }
+        }
+    }
+
+     async function showSavedRoutes(origin: string, destination: string, i: number) {
+        let node = document.getElementById("savedRoutes");
+        let savedRoute = document.createElement("li");
+        let subHeading = document.createElement("ol");
+        let routeHeader = document.createElement("h2");
+        subHeading.className = "subHeading";
+        savedRoute.className = "savedRoute";
+        routeHeader.innerHTML = "Route " + (i + 1);
+        let originList = document.createElement("li");
+        originList.innerHTML = origin;
+        subHeading.appendChild(originList);
+
+        let destinationList = document.createElement("li");
+        destinationList.innerHTML = destination!;
+        subHeading.appendChild(destinationList);
+
+        savedRoute.appendChild(routeHeader);
+        savedRoute.appendChild(subHeading);
+        node?.appendChild(savedRoute);
+
+        let loadButton = document.createElement("Button");
+        loadButton.innerHTML = "Load";
+        routeHeader.appendChild(loadButton);
+        loadButton.onclick = async function() {
+            if (origin === '' || destination === ' ') {
+                return;
+            } 
+            const directionsService = new google.maps.DirectionsService();
+            const results = await directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: google.maps.TravelMode.TRANSIT,
+                provideRouteAlternatives: true,
+            });
+    
+            setDirectionsResponse(results);
+            setDistance(results.routes[0].legs[0].distance!.text);
+            setDuration(results.routes[0].legs[0].duration!.text);
+            displayFirstRoute(results);
+        }
+
+        let deleteButton = document.createElement("Button");
+        deleteButton.innerHTML = "Delete";
+        routeHeader.appendChild(deleteButton);
+        deleteButton.onclick = async function() {
+            await axios.delete(`${getApiUrl()}/api/users/deleteRoute/{username}/{origin}/{destination}`, {
+                headers: {
+                    'Authorization': `Bearer ${user?.token}`
+                }
+            }).then((response) => {
+                const [ message ] = response.data;
+                console.log(message);
+            })
+            savedRoute!.innerHTML = "";
+        }
+    }
+
     function validateRoute(i: number) {
-
         for (let j = i - 1; j >= 0; j--) {
-
             let currentRouteStepCount = Number(directionsResponse?.routes[i].legs[0].steps.length)
             let comparedRouteStepCount = Number(directionsResponse?.routes[j].legs[0].steps.length)
             let stepCount = currentRouteStepCount;
             if (currentRouteStepCount < comparedRouteStepCount) {
                 stepCount = comparedRouteStepCount;
             }
-
             for (let k = 0; k < stepCount; k++) {
-
-                if (directionsResponse?.routes[i].legs[0].steps[k].instructions != directionsResponse?.routes[j].legs[0].steps[k].instructions) {
+                if (directionsResponse?.routes[i].legs[0].steps[k].instructions != directionsResponse?.routes[j].legs[0].steps[k].instructions) { 
                     return true;
                 }
             }
@@ -139,6 +329,8 @@ export function GetRoute() {
         instructions!.innerHTML = "";
         let altRoutes = document.getElementById("transitRoutes");
         altRoutes!.innerHTML = "";
+        let savedRoutes = document.getElementById("savedRoutes");
+        savedRoutes!.innerHTML = "";
         setDirectionsResponse(null);
         setDistance('');
         setDuration('');
@@ -155,11 +347,21 @@ export function GetRoute() {
                 <div className={Styles.search}>
                     <Box flexGrow={1}>
                         <Autocomplete>
+                            <Input 
+                            disabled={loading} 
+                            type='text' 
+                            placeholder='Origin' 
+                            ref={originRef}/>
                             <Input type='text' placeholder='Origin' ref={originRef} data-testid="origin-input" />
                         </Autocomplete>
                     </Box>
                     <Box flexGrow={1}>
                         <Autocomplete>
+                            <Input 
+                                disabled={loading} 
+                                type='text' 
+                                placeholder='Destination' 
+                                ref={destinationRef}/>
                             <Input type='text' placeholder='Destination' ref={destinationRef} data-testid="destination-input" />
                         </Autocomplete>
                     </Box>
@@ -172,11 +374,15 @@ export function GetRoute() {
                         <IconButton aria-label='center back' icon={<FaHome />} onClick={() => {
                             map!.panTo(startingPosition)
                             map!.setZoom(17);
+                        }}/>
+                        <Button onClick={handleSaveRoute} variant="contained" disabled={loading || !(originRef.current?.value) || !(destinationRef.current?.value)}> 
+                        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Save'}
+                        </Button>
                         }} data-testid="home-button" />
                     </ButtonGroup>
                 </div>
                 <aside className={Styles.steps}>
-                    <h2>Instructions</h2>
+                    <h2 className={Styles.stepTitle}>Instructions</h2>
                     <div id="firstRoute">
 
                     </div>
@@ -189,14 +395,20 @@ export function GetRoute() {
                     <Text>Duration: {duration}</Text>
                 </Box>
             </HStack>
-            {/* <IconButton aria-label='center back' icon={<FaRoute fontSize={"large"} />} onClick={displayRoute}/> */}
-            <h2>Show Alternative Routes :
-
-                <Switch checked={checked} onChange={displayRoute} data-testid="toggle-alternative-routes" />
-
-            </h2>
-            <ol id="transitRoutes" data-testid="transit-routes-list">
-            </ol>
+            <div>
+                <h2> Saved Routes 
+                    <Switch checked={checkedSavedRoutes} onChange={handleDisplayEvent}/>
+                </h2>
+                <ol id="savedRoutes">
+                </ol>
+            </div>
+            <div>
+                <h2>Show Alternative Routes :  
+                    <Switch checked={checked} onChange={displayRoute}/>
+                </h2>
+                <ol id="transitRoutes">
+                </ol>
+            </div>
         </div>
 
         {/* Map (Displayed on the right) */}
@@ -208,5 +420,4 @@ export function GetRoute() {
         </div>
     </div>;
 }
-
 export default GetRoute;

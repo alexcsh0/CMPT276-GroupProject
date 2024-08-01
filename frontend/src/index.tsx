@@ -15,6 +15,7 @@ import { GetWeather } from './components/pages/weather/weather';
 import { GetCalendar } from './components/pages/calendar/calendar';
 import { SnackbarProvider } from './components/common/snackbar/snackbarContext';
 import { AlertForm } from './components/pages/alerts/alertsForm';
+import { Success } from './components/pages/routes/success';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -55,6 +56,11 @@ const router = createBrowserRouter([
   {
     path: '/alerts',
     element: <AlertForm />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/success',
+    element: <Success />,
     errorElement: <ErrorPage />
   },
   {

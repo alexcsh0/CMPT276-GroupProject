@@ -2,6 +2,9 @@ package cmpt276.group_project.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -18,6 +21,14 @@ public class User {
 
     @Column(nullable = false)
     private int userType;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_routes",
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id")
+    )
+    private Set<Route> routes = new HashSet<>();
 
     //constructors
     public User() {}
@@ -45,6 +56,10 @@ public class User {
         return id;
     }
 
+    public Set<Route> getRoutes() {
+        return routes;
+    }
+
     //setters
     public void setUsername(String username) {
         this.username = username;
@@ -60,5 +75,9 @@ public class User {
 
     public void setid(int id) {
         this.id = id;
+    }
+
+    public void setRoutes(Set<Route> routes) {
+        this.routes = routes;
     }
 }

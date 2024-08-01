@@ -1,12 +1,14 @@
 package cmpt276.group_project.controllers;
 
 import cmpt276.group_project.models.User;
+import cmpt276.group_project.models.Route;
 import cmpt276.group_project.services.UserService;
 import cmpt276.group_project.config.JWT;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -94,5 +96,52 @@ public class UserController {
         public void setUsername(String username) {
             this.username = username;
         }
+    }
+
+    // When logged in, saves a route into the user's account
+    @PostMapping("/saveRoute/{username}/{routeId}")
+    public User saveRouteToUser(@PathVariable String username, @PathVariable int routeId) {
+        return userService.saveRouteToUser(username, routeId);
+    }
+
+    @PostMapping("/saveRoute")
+    public User saveRouteToUser(@RequestBody User user) {
+        return null;
+    }
+
+
+    // Returns the users amount of saved routes
+    @GetMapping("/getRoutesAmount/{username}")
+    public ResponseEntity<?> getRoutesAmount(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUser(username).getRoutes().size());
+    }
+
+    // Returns the users saved routes
+    @GetMapping("/getRoutes")
+    public ResponseEntity<?> getRoutes(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUser(username).getRoutes());
+    }
+
+    // Returns the users saved routes origin at a specific index
+    @GetMapping("/getRoutesOrigin/{username}/{index}")
+    public ResponseEntity<?> getRoutesOrigin(@PathVariable String username, @PathVariable int index) {
+        Set<Route> routeSet = userService.getUser(username).getRoutes();
+        Route[] routeArray = (routeSet).toArray(new Route[routeSet.size()]);
+        String origin = routeArray[index].getOrigin();
+        return ResponseEntity.ok(origin);
+    }
+
+    // Returns the users saved routes destination at a specific index
+    @GetMapping("/getRoutesDestination/{username}/{i}")
+    public ResponseEntity<?> getRoutesDestination(@PathVariable String username, @PathVariable int index) {
+        Set<Route> routeSet = userService.getUser(username).getRoutes();
+        Route[] routeArray = (routeSet).toArray(new Route[routeSet.size()]);
+        String destination = routeArray[index].getDestination();
+        return ResponseEntity.ok(destination);
+    }
+
+    @DeleteMapping("/deleteRoute/{username}/{origin}/{destination}") 
+    public ResponseEntity<String> deleteRoute(@PathVariable String username, @PathVariable String origin, @PathVariable String destination) {
+        return ResponseEntity.ok(userService.deleteRoute(username, origin, destination));
     }
 }
