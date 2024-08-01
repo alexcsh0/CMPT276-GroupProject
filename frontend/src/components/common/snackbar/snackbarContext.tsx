@@ -5,7 +5,7 @@ interface SnackbarContextType {
     showSnackbar: (message: string) => void;
 }
 
-const SnackbarContext = createContext<SnackbarContextType | undefined>(undefined);
+export const SnackbarContext = createContext<SnackbarContextType | undefined>(undefined);
 
 export function useSnackbar() {
     const context = useContext(SnackbarContext);
