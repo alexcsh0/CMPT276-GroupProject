@@ -76,6 +76,10 @@ export function GetRoute() {
         console.log(origin);
         console.log(destination);
 
+        console.log(username);
+        console.log(user);
+        
+
         // Step 0: Check if logged in
         try {
             if (username == null) throw error;
@@ -90,7 +94,7 @@ export function GetRoute() {
             }).then((response) => {
                 console.log(response.data);
                 const { routeId } = response.data;
-                
+        
                 // Step 2: Link relation between route and user table, and save the route on current account
                 try {
                     axios.post(`${getApiUrl()}/api/users/saveRoute/{username}/{routeId}`, {
