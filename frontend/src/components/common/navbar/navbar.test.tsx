@@ -24,8 +24,8 @@ describe('NavBar Component', () => {
                     token: 'eyJhbG2c9j4c',
                     username: 'alex123'
                 },
-                login: () => { },
-                logout: () => { },
+                login: jest.fn(),
+                logout: jest.fn(),
                 loading: false
             }}>
                 <NavBar />
@@ -49,8 +49,8 @@ describe('NavBar Component', () => {
                     token: 'eyJhbG2c9j4c',
                     username: 'alex123'
                 },
-                login: () => { },
-                logout: () => { },
+                login: jest.fn(),
+                logout: jest.fn(),
                 loading: false
             }}>
                 <NavBar />
@@ -74,8 +74,8 @@ describe('NavBar Component', () => {
                     token: 'eyJhbG2c9j4c',
                     username: 'alex123'
                 },
-                login: () => { },
-                logout: () => { },
+                login: jest.fn(),
+                logout: jest.fn(),
                 loading: false
             }}>
                 <NavBar />
@@ -93,8 +93,8 @@ describe('NavBar Component', () => {
         render(
             <UserContext.Provider value={{
                 user: null,
-                login: () => { },
-                logout: () => { },
+                login: jest.fn(),
+                logout: jest.fn(),
                 loading: false
             }}>
                 <NavBar />
