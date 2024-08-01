@@ -1,9 +1,10 @@
+import React from 'react';
 import { useState, useMemo, useRef } from 'react';
 import axios from 'axios';
 import ky from 'ky'
 import { Switch, CircularProgress } from "@mui/material";
 import {
-    Box, 
+    Box,
     Button,
     ButtonGroup,
     HStack,
@@ -23,7 +24,7 @@ import {
     Autocomplete,
 } from '@react-google-maps/api';
 import { VscChromeClose } from 'react-icons/vsc';
-import { 
+import {
     FaHome,
 } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,6 @@ export function GetRoute() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
     const startingPosition = useMemo<latLngLiteral>(() => ({ lat: 49.18757324981386, lng: -122.84972643059662 }), []);
     const [map, setMap] = useState<Map | null>((null));
     const [directionsResponse, setDirectionsResponse] = useState<DirectionsResult | null>(null);
@@ -122,7 +122,7 @@ export function GetRoute() {
     async function calculateRoute() {
         if (originRef.current!.value === '' || destinationRef.current!.value === ' ') {
             return;
-        } 
+        }
         const directionsService = new google.maps.DirectionsService();
         const results = await directionsService.route({
             origin: originRef.current!.value,
@@ -162,10 +162,10 @@ export function GetRoute() {
 
         if (!checked) {
             let amountOfAltRoutes = Number(directionsResponse?.routes.length); // returns the number of possible routes (through transit only) available from point a to b
-    
+
             for (let i = 1; i < amountOfAltRoutes; i++) {
                 if (validateRoute(i)) {
-    
+
                     let node = document.getElementById("transitRoutes");
                     let altRoute = document.createElement("li");
                     let instructions = document.createElement("ol");
@@ -180,7 +180,7 @@ export function GetRoute() {
                         step.innerHTML = (directionsResponse?.routes[i].legs[0].steps[j].instructions)!;
                         instructions.appendChild(step);
                     }
-        
+
                     altRoute.appendChild(routeHeader);
                     altRoute.appendChild(instructions);
                     node?.appendChild(altRoute);
@@ -311,7 +311,7 @@ export function GetRoute() {
             let currentRouteStepCount = Number(directionsResponse?.routes[i].legs[0].steps.length)
             let comparedRouteStepCount = Number(directionsResponse?.routes[j].legs[0].steps.length)
             let stepCount = currentRouteStepCount;
-            if ( currentRouteStepCount < comparedRouteStepCount) {
+            if (currentRouteStepCount < comparedRouteStepCount) {
                 stepCount = comparedRouteStepCount;
             }
             for (let k = 0; k < stepCount; k++) {
@@ -343,7 +343,7 @@ export function GetRoute() {
         <div className={Styles.searchBar}>
             <h1>Search</h1>
             <HStack spacing={2} justifyContent='space-between' alignItems="initial">
-                
+
                 <div className={Styles.search}>
                     <Box flexGrow={1}>
                         <Autocomplete>
@@ -352,6 +352,7 @@ export function GetRoute() {
                             type='text' 
                             placeholder='Origin' 
                             ref={originRef}/>
+                            <Input type='text' placeholder='Origin' ref={originRef} data-testid="origin-input" />
                         </Autocomplete>
                     </Box>
                     <Box flexGrow={1}>
@@ -361,14 +362,15 @@ export function GetRoute() {
                                 type='text' 
                                 placeholder='Destination' 
                                 ref={destinationRef}/>
+                            <Input type='text' placeholder='Destination' ref={destinationRef} data-testid="destination-input" />
                         </Autocomplete>
                     </Box>
 
                     <ButtonGroup className={Styles.buttonGroup}>
-                        <Button type='submit'onClick={calculateRoute}>
+                        <Button type='submit' onClick={calculateRoute} data-testid="calculate-route-button">
                             Calculate Route
                         </Button>
-                        <IconButton aria-label='center back' icon={<VscChromeClose />} onClick={clearRoute}/>
+                        <IconButton aria-label='center back' icon={<VscChromeClose />} onClick={clearRoute} data-testid="clear-route-button" />
                         <IconButton aria-label='center back' icon={<FaHome />} onClick={() => {
                             map!.panTo(startingPosition)
                             map!.setZoom(17);
@@ -376,6 +378,7 @@ export function GetRoute() {
                         <Button onClick={handleSaveRoute} variant="contained" disabled={loading || !(originRef.current?.value) || !(destinationRef.current?.value)}> 
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Save'}
                         </Button>
+                        }} data-testid="home-button" />
                     </ButtonGroup>
                 </div>
                 <aside className={Styles.steps}>
@@ -411,8 +414,8 @@ export function GetRoute() {
         {/* Map (Displayed on the right) */}
         <div className={Styles.map}>
             <GoogleMap zoom={17} center={startingPosition} mapContainerClassName={Styles.mapContainer} onLoad={(map) => setMap(map)}>
-                
-                {directionsResponse && <DirectionsRenderer directions={directionsResponse}/>}
+
+                {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
             </GoogleMap>
         </div>
     </div>;

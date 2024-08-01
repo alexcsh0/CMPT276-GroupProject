@@ -26,6 +26,8 @@ public class SecurityConfig {
                                 "/api/users/**",
                                 "/api/alerts/**",
                                 "/api/routes/**")
+                                "/api/calendars/**")
+
                         .permitAll()
                         .anyRequest()
                         .authenticated());

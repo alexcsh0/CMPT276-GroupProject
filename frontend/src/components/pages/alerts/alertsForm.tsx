@@ -76,6 +76,7 @@ export function AlertForm() {
                 boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
                 backgroundColor: 'white',
             }}
+            data-testid="alert-form"
         >
             <Typography variant="h5" component="div" sx={{ mb: 2 }}>
                 Create an Alert
@@ -90,6 +91,7 @@ export function AlertForm() {
                 error={submitAttempted && !title}
                 helperText={submitAttempted && !title ? "Title is required" : ""}
                 disabled={loading}
+                inputProps={{ 'data-testid': 'alert-title-input' }}
             />
             <TextField
                 label="Affected Service"
@@ -101,6 +103,7 @@ export function AlertForm() {
                 helperText={submitAttempted && !affectedService ? "Affected Service is required" : ""}
                 sx={{ mt: 2 }}
                 disabled={loading}
+                inputProps={{ 'data-testid': 'alert-affected-service-input' }}
             />
             <TextField
                 label="Message"
@@ -114,6 +117,7 @@ export function AlertForm() {
                 helperText={submitAttempted && !message ? "Message is required" : ""}
                 sx={{ mt: 2 }}
                 disabled={loading}
+                inputProps={{ 'data-testid': 'alert-message-input' }}
             />
 
             <Button
@@ -123,12 +127,13 @@ export function AlertForm() {
                 fullWidth
                 sx={{ mt: 2 }}
                 disabled={loading || !title || !affectedService || !message}
+                data-testid="alert-submit-button"
             >
                 {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Create Alert'}
             </Button>
 
             {error && (
-                <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+                <Typography color="error" variant="body2" sx={{ mt: 2 }} >
                     {error}
                 </Typography>
             )}

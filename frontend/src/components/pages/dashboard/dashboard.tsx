@@ -38,13 +38,33 @@ export function Dashboard() {
     fetchAlerts();
   }, [user?.token]);
 
+  const [offAlerts, setOffAlerts] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        const response = await axios.post(`${getApiUrl()}/api/alerts/offAlerts`, {
+          headers: {
+            'Authorization': `Bearer ${user?.token}`
+          }
+        });
+        console.log(response.data)
+        setOffAlerts(response.data);
+      } catch (error) {
+        console.error("Error fetching alerts", error);
+      }
+    };
+
+    fetchAlerts();
+  }, [user?.token]);
+
   return (
     <>
       <NavBar />
 
-      <div className={style.dashboardPage}>
-        <h3>Today's Date: {new Date().toLocaleDateString()}</h3>
-        <h3>Current Time: {new Date().toLocaleTimeString()}</h3>
+      <div className={style.dashboardPage} data-testid="dashboard-page">
+        <h3 data-testid="date">Today's Date: {new Date().toLocaleDateString()}</h3>
+        <h3 data-testid="time">Current Time: {new Date().toLocaleTimeString()}</h3>
 
         <Box
           display="flex"
@@ -62,6 +82,7 @@ export function Dashboard() {
               maxWidth: 500,
               border: '1px solid black'
             }}
+            data-testid="upcoming-buses"
           >
             <Typography variant="h4" color="primary">
               Upcoming Busses
@@ -77,6 +98,7 @@ export function Dashboard() {
               maxWidth: 500,
               border: '1px solid black'
             }}
+            data-testid="upcoming-skytrains"
           >
             <Typography variant="h4" color="primary">
               Upcoming Skytrains
@@ -99,11 +121,12 @@ export function Dashboard() {
               overflowY: 'auto',
               border: '1px solid black'
             }}
+            data-testid="alerts-section"
           >
             <Typography variant="h4" color="primary">
               Alerts
             </Typography>
-            <Accordion>
+            <Accordion data-testid="custom-alerts-accordion">
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
               >
@@ -112,19 +135,26 @@ export function Dashboard() {
 
               {alerts.length > 0 ? (
                 alerts.map(alert => (
-                  <AlertCard key={alert.id} {...alert} />
+                  <AlertCard key={alert.id} {...alert} data-testid={`alert-card-${alert.id}`} />
                 ))
               ) : (
                 <Typography>No current alerts.</Typography>
               )}
             </Accordion>
-            <Accordion>
+            <Accordion data-testid="official-alerts-accordion">
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
               >
-                <Typography>Official Translink Alerts</Typography>
+                <Typography>Official Alerts</Typography>
               </AccordionSummary>
-              <Typography>No Translink alerts...TODO: implement this with Translink API</Typography>
+
+              {offAlerts.length > 0 ? (
+                offAlerts.map(alert => (
+                  <AlertCard key={alert.title} {...alert} data-testid={`off-alert-card-${alert.id}`} />
+                ))
+              ) : (
+                <Typography>No current official alerts.</Typography>
+              )}
             </Accordion>
           </Paper>
         </Box>
