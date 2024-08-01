@@ -6,8 +6,6 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@fontsource/roboto": "^5.0.13",
-    "@headlessui/react": "^2.1.2",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/x-charts": "^7.11.0",
