@@ -12,6 +12,7 @@ import java.net.URL;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 
+
 @RestController
 @RequestMapping("/api/alerts")
 public class AlertController {
@@ -35,10 +36,17 @@ public class AlertController {
         System.out.println(feed.getEntityList().size());
         List<Alert> res = new LinkedList<>();
         for (FeedEntity entity : feed.getEntityList()) {
-
-            Alert alert = new Alert(entity.getAlert().getHeaderText().toString(),
-                    entity.getAlert().getCause().getValueDescriptor().toString(), entity.getAlert().getDescriptionText().toString());
-            res.add(alert);
+            String head = entity.getAlert().getHeaderText().toString();
+            String body = entity.getAlert().getDescriptionText().toString();
+            try {
+                String h = head.substring(23, head.substring(23).indexOf("\"")+21);
+                String b = body.substring(23, body.substring(23).indexOf("\"")+21);
+                Alert alert = new Alert(h,
+                        entity.getAlert().getCause().getValueDescriptor().toString(), b);
+                res.add(alert);
+            } catch (Exception e) {
+                continue;
+            }
         }
         return res;
     }
