@@ -1,7 +1,8 @@
+import React from 'react';
 import { useState, useMemo, useRef } from 'react';
 import { Switch } from "@mui/material";
 import {
-    Box, 
+    Box,
     Button,
     ButtonGroup,
     HStack,
@@ -16,7 +17,7 @@ import {
     Autocomplete,
 } from '@react-google-maps/api';
 import { VscChromeClose } from 'react-icons/vsc';
-import { 
+import {
     FaHome,
 } from "react-icons/fa";
 
@@ -25,7 +26,7 @@ type latLngLiteral = google.maps.LatLngLiteral;
 type DirectionsResult = google.maps.DirectionsResult;
 type Map = google.maps.Map;
 
-export function GetRoute() { 
+export function GetRoute() {
 
     const startingPosition = useMemo<latLngLiteral>(() => ({ lat: 49.18757324981386, lng: -122.84972643059662 }), []);
     const [map, setMap] = useState<Map | null>((null));
@@ -40,7 +41,7 @@ export function GetRoute() {
     async function calculateRoute() {
         if (originRef.current!.value === '' || destinationRef.current!.value === ' ') {
             return;
-        } 
+        }
         const directionsService = new google.maps.DirectionsService();
         const results = await directionsService.route({
             origin: originRef.current!.value,
@@ -80,10 +81,10 @@ export function GetRoute() {
 
         if (!checked) {
             let amountOfAltRoutes = Number(directionsResponse?.routes.length); // returns the number of possible routes (through transit only) available from point a to b
-    
+
             for (let i = 1; i < amountOfAltRoutes; i++) {
                 if (validateRoute(i)) {
-    
+
                     let node = document.getElementById("transitRoutes");
                     let altRoute = document.createElement("li");
                     let instructions = document.createElement("ol");
@@ -98,7 +99,7 @@ export function GetRoute() {
                         step.innerHTML = (directionsResponse?.routes[i].legs[0].steps[j].instructions)!;
                         instructions.appendChild(step);
                     }
-        
+
                     altRoute.appendChild(routeHeader);
                     altRoute.appendChild(instructions);
                     node?.appendChild(altRoute);
@@ -112,19 +113,19 @@ export function GetRoute() {
     }
 
     function validateRoute(i: number) {
-       
+
         for (let j = i - 1; j >= 0; j--) {
-            
+
             let currentRouteStepCount = Number(directionsResponse?.routes[i].legs[0].steps.length)
             let comparedRouteStepCount = Number(directionsResponse?.routes[j].legs[0].steps.length)
             let stepCount = currentRouteStepCount;
-            if ( currentRouteStepCount < comparedRouteStepCount) {
+            if (currentRouteStepCount < comparedRouteStepCount) {
                 stepCount = comparedRouteStepCount;
             }
 
             for (let k = 0; k < stepCount; k++) {
 
-                if (directionsResponse?.routes[i].legs[0].steps[k].instructions != directionsResponse?.routes[j].legs[0].steps[k].instructions) { 
+                if (directionsResponse?.routes[i].legs[0].steps[k].instructions != directionsResponse?.routes[j].legs[0].steps[k].instructions) {
                     return true;
                 }
             }
@@ -150,28 +151,28 @@ export function GetRoute() {
         <div className={Styles.searchBar}>
             <h1>Search</h1>
             <HStack spacing={2} justifyContent='space-between' alignItems="initial">
-                
+
                 <div className={Styles.search}>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input type='text' placeholder='Origin' ref={originRef}/>
+                            <Input type='text' placeholder='Origin' ref={originRef} data-testid="origin-input" />
                         </Autocomplete>
                     </Box>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input type='text' placeholder='Destination' ref={destinationRef}/>
+                            <Input type='text' placeholder='Destination' ref={destinationRef} data-testid="destination-input" />
                         </Autocomplete>
                     </Box>
 
                     <ButtonGroup className={Styles.buttonGroup}>
-                        <Button type='submit'onClick={calculateRoute}>
+                        <Button type='submit' onClick={calculateRoute} data-testid="calculate-route-button">
                             Calculate Route
                         </Button>
-                        <IconButton aria-label='center back' icon={<VscChromeClose />} onClick={clearRoute}/>
+                        <IconButton aria-label='center back' icon={<VscChromeClose />} onClick={clearRoute} data-testid="clear-route-button" />
                         <IconButton aria-label='center back' icon={<FaHome />} onClick={() => {
                             map!.panTo(startingPosition)
                             map!.setZoom(17);
-                        }}/>
+                        }} data-testid="home-button" />
                     </ButtonGroup>
                 </div>
                 <aside className={Styles.steps}>
@@ -189,20 +190,20 @@ export function GetRoute() {
                 </Box>
             </HStack>
             {/* <IconButton aria-label='center back' icon={<FaRoute fontSize={"large"} />} onClick={displayRoute}/> */}
-            <h2>Show Alternative Routes :  
-            
-            <Switch checked={checked} onChange={displayRoute}/>
-            
+            <h2>Show Alternative Routes :
+
+                <Switch checked={checked} onChange={displayRoute} data-testid="toggle-alternative-routes" />
+
             </h2>
-            <ol id="transitRoutes">
+            <ol id="transitRoutes" data-testid="transit-routes-list">
             </ol>
         </div>
 
         {/* Map (Displayed on the right) */}
         <div className={Styles.map}>
             <GoogleMap zoom={17} center={startingPosition} mapContainerClassName={Styles.mapContainer} onLoad={(map) => setMap(map)}>
-                
-                {directionsResponse && <DirectionsRenderer directions={directionsResponse}/>}
+
+                {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
             </GoogleMap>
         </div>
     </div>;
