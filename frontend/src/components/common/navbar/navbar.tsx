@@ -54,6 +54,7 @@ export function NavBar() {
             justifyContent: 'flex-start',
             flex: 1
           }}
+          data-testid="navbar-home-link"
         >
           <DirectionsTransitIcon sx={{ marginRight: 1 }} />
           <Typography variant="h6" component="div">
@@ -69,6 +70,7 @@ export function NavBar() {
               color="secondary"
               underline="none"
               textTransform="uppercase"
+              data-testid={`navbar-link-${page.toLowerCase()}`}
             >
               {page}
             </Link>
@@ -79,7 +81,7 @@ export function NavBar() {
           {user ? (
             <>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} data-testid="navbar-avatar">
                   <Avatar alt="User" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
@@ -99,9 +101,10 @@ export function NavBar() {
                   horizontal: 'right'
                 }}
                 sx={{ mt: '45px' }}
+                data-testid="navbar-user-menu"
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={handleCloseUserMenu} data-testid={`navbar-menuitem-${setting.toLowerCase()}`}>
                     <Link
                       href={`/${setting.toLowerCase()}`}
                       underline="none"
@@ -124,6 +127,7 @@ export function NavBar() {
                 color="secondary"
                 underline="none"
                 textTransform="none"
+                data-testid="navbar-login-link"
               >
                 Log In
               </Link>
@@ -133,6 +137,7 @@ export function NavBar() {
                 color="secondary"
                 underline="none"
                 textTransform="none"
+                data-testid="navbar-register-link"
               >
                 Sign Up
               </Link>
