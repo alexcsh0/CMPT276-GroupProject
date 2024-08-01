@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useMemo, useRef } from 'react';
 import axios from 'axios';
-import ky from 'ky'
+import ky from 'ky';
 import { Switch, CircularProgress } from "@mui/material";
 import {
     Box,
@@ -347,21 +347,11 @@ export function GetRoute() {
                 <div className={Styles.search}>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input 
-                            disabled={loading} 
-                            type='text' 
-                            placeholder='Origin' 
-                            ref={originRef}/>
                             <Input type='text' placeholder='Origin' ref={originRef} data-testid="origin-input" />
                         </Autocomplete>
                     </Box>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input 
-                                disabled={loading} 
-                                type='text' 
-                                placeholder='Destination' 
-                                ref={destinationRef}/>
                             <Input type='text' placeholder='Destination' ref={destinationRef} data-testid="destination-input" />
                         </Autocomplete>
                     </Box>
@@ -374,11 +364,10 @@ export function GetRoute() {
                         <IconButton aria-label='center back' icon={<FaHome />} onClick={() => {
                             map!.panTo(startingPosition)
                             map!.setZoom(17);
-                        }}/>
+                        }} data-testid="home-button" />
                         <Button onClick={handleSaveRoute} variant="contained" disabled={loading || !(originRef.current?.value) || !(destinationRef.current?.value)}> 
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Save'}
                         </Button>
-                        }} data-testid="home-button" />
                     </ButtonGroup>
                 </div>
                 <aside className={Styles.steps}>
