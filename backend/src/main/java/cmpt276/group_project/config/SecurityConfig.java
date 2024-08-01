@@ -33,7 +33,7 @@ public class SecurityConfig {
 
                         .permitAll()
                         .anyRequest()
-                        .authenticated();
+                        .authenticated());
                 
         return http.build();
     }
