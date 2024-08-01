@@ -22,14 +22,14 @@ const PublicCalendar: React.FC = () => {
   const { user } = useUser();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
-  const [ userEvents, setUserEvents ] = useState<Event[]>([]);
+  const [userEvents, setUserEvents] = useState<Event[]>([]);
 
   const [title, setTitle] = useState('');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [submitAttempted] = useState(false);
   let username: string | null = null;
-  
+
   if (user) {
     username = user.username;
   } else {
@@ -52,7 +52,7 @@ const PublicCalendar: React.FC = () => {
         end
       }, {
         headers: {
-            'Authorization': `Bearer ${user?.token}`
+          'Authorization': `Bearer ${user?.token}`
         }
       }).then(() => {
         navigate('/calendar');
@@ -126,82 +126,88 @@ const PublicCalendar: React.FC = () => {
 
     fetchAlerts();
   }, [user?.token]);
-  
+
   return (
     <div>
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
         events={alerts}
+        data-testid="full-calendar"
       />
 
       <Box
-            sx={{
-                maxWidth: '500px',
-                margin: 'auto',
-                marginTop: '8vh',
-                padding: '20px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                backgroundColor: 'white',
-            }}
+        sx={{
+          maxWidth: '500px',
+          margin: 'auto',
+          marginTop: '8vh',
+          padding: '20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          backgroundColor: 'white',
+        }}
+        data-testid="event-form"
+      >
+        <Typography variant="h5" component="div" sx={{ mb: 2 }}>
+          Add an Event
+        </Typography>
+
+        <TextField
+          label="Title"
+          value={title}
+          onChange={getHandleChange(setTitle)}
+          fullWidth
+          required
+          error={submitAttempted && !title}
+          helperText={submitAttempted && !title ? "Title is required" : ""}
+          disabled={loading}
+          inputProps={{ 'data-testid': 'event-title-input' }}
+        />
+        <TextField
+          label="Start date (YYYY-MM-DD)"
+          value={start}
+          onChange={getHandleChange(setStart)}
+          fullWidth
+          required
+          error={submitAttempted && !start}
+          helperText={submitAttempted && !start ? "Affected Service is required" : ""}
+          sx={{ mt: 2 }}
+          disabled={loading}
+          inputProps={{ 'data-testid': 'event-start-input' }}
+        />
+        <TextField
+          label="End date (YYYY-MM-DD)"
+          value={end}
+          onChange={getHandleChange(setEnd)}
+          fullWidth
+          required
+          multiline
+          rows={4}
+          error={submitAttempted && !end}
+          helperText={submitAttempted && !end ? "Message is required" : ""}
+          sx={{ mt: 2 }}
+          disabled={loading}
+          inputProps={{ 'data-testid': 'event-end-input' }}
+        />
+
+        <Button
+          onClick={handleAddEvent}
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mt: 2 }}
+          disabled={loading || !title || !start || !end}
+          data-testid="event-submit-button"
         >
-            <Typography variant="h5" component="div" sx={{ mb: 2 }}>
-                Add an Event
-            </Typography>
+          {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Create Event'}
+        </Button>
 
-            <TextField
-                label="Title"
-                value={title}
-                onChange={getHandleChange(setTitle)}
-                fullWidth
-                required
-                error={submitAttempted && !title}
-                helperText={submitAttempted && !title ? "Title is required" : ""}
-                disabled={loading}
-            />
-            <TextField
-                label="Start date (YYYY-MM-DD)"
-                value={start}
-                onChange={getHandleChange(setStart)}
-                fullWidth
-                required
-                error={submitAttempted && !start}
-                helperText={submitAttempted && !start ? "Affected Service is required" : ""}
-                sx={{ mt: 2 }}
-                disabled={loading}
-            />
-            <TextField
-                label="End date (YYYY-MM-DD)"
-                value={end}
-                onChange={getHandleChange(setEnd)}
-                fullWidth
-                required
-                multiline
-                rows={4}
-                error={submitAttempted && !end}
-                helperText={submitAttempted && !end ? "Message is required" : ""}
-                sx={{ mt: 2 }}
-                disabled={loading}
-            />
-
-            <Button
-                onClick={handleAddEvent}
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
-                disabled={loading || !title || !start || !end}
-            >
-                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Create Event'}
-            </Button>
-
-            {error && (
-                <Typography color="error" variant="body2" sx={{ mt: 2 }}>
-                    {error}
-                </Typography>
-            )}
-        </Box>
+        {error && (
+          <Typography color="error" variant="body2" sx={{ mt: 2 }} data-testid="event-error">
+            {error}
+          </Typography>
+        )}
+      </Box>
     </div>
   );
 }
