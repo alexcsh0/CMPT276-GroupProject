@@ -1,12 +1,14 @@
 package cmpt276.group_project.controllers;
 
 import cmpt276.group_project.models.User;
+import cmpt276.group_project.models.Route;
 import cmpt276.group_project.services.UserService;
 import cmpt276.group_project.config.JWT;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,7 +30,7 @@ public class UserController {
             return ResponseEntity.status(409).body("Username already exists");
         }
         String token = jwtUtil.generateToken(registeredUser.getUsername());
-        return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUserType()));
+        return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUserType(), registeredUser.getUsername()));
     }
     
     //logs in user and returns token and user type if successful
@@ -39,7 +41,7 @@ public class UserController {
             user.getUsername(), user.getPassword());
         if (loggedInUser != null) {
             String token = jwtUtil.generateToken(loggedInUser.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token, loggedInUser.getUserType()));
+            return ResponseEntity.ok(new AuthResponse(token, loggedInUser.getUserType(), loggedInUser.getUsername()));
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
@@ -52,7 +54,7 @@ public class UserController {
         User user = userService.getUser(username);
         boolean isValid = jwtUtil.validateToken(token, username);
         if (isValid) {
-            return ResponseEntity.ok(new AuthResponse(token, user.getUserType()));
+            return ResponseEntity.ok(new AuthResponse(token, user.getUserType(), user.getUsername()));
         }
         return ResponseEntity.status(401).body("Invalid token");
     }
@@ -62,10 +64,12 @@ public class UserController {
     static class AuthResponse {
         private String token;
         private int userType;
+        private String username;
 
-        public AuthResponse(String token, int userType) {
+        public AuthResponse(String token, int userType, String username) {
             this.token = token;
             this.userType = userType;
+            this.username = username;
         }
 
         //getters and setters
@@ -77,6 +81,10 @@ public class UserController {
             return userType;
         }
 
+        public String getUsername() {
+            return username;
+        }
+
         public void setUserType(int userType) {
             this.userType = userType;
         }
@@ -84,5 +92,56 @@ public class UserController {
         public void setToken(String token) {
             this.token = token;
         }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+    }
+
+    // When logged in, saves a route into the user's account
+    @PostMapping("/saveRoute/{username}/{routeId}")
+    public User saveRouteToUser(@PathVariable String username, @PathVariable int routeId) {
+        return userService.saveRouteToUser(username, routeId);
+    }
+
+    @PostMapping("/saveRoute")
+    public User saveRouteToUser(@RequestBody User user) {
+        return null;
+    }
+
+
+    // Returns the users amount of saved routes
+    @GetMapping("/getRoutesAmount/{username}")
+    public ResponseEntity<?> getRoutesAmount(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUser(username).getRoutes().size());
+    }
+
+    // Returns the users saved routes
+    @GetMapping("/getRoutes")
+    public ResponseEntity<?> getRoutes(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUser(username).getRoutes());
+    }
+
+    // Returns the users saved routes origin at a specific index
+    @GetMapping("/getRoutesOrigin/{username}/{index}")
+    public ResponseEntity<?> getRoutesOrigin(@PathVariable String username, @PathVariable int index) {
+        Set<Route> routeSet = userService.getUser(username).getRoutes();
+        Route[] routeArray = (routeSet).toArray(new Route[routeSet.size()]);
+        String origin = routeArray[index].getOrigin();
+        return ResponseEntity.ok(origin);
+    }
+
+    // Returns the users saved routes destination at a specific index
+    @GetMapping("/getRoutesDestination/{username}/{i}")
+    public ResponseEntity<?> getRoutesDestination(@PathVariable String username, @PathVariable int index) {
+        Set<Route> routeSet = userService.getUser(username).getRoutes();
+        Route[] routeArray = (routeSet).toArray(new Route[routeSet.size()]);
+        String destination = routeArray[index].getDestination();
+        return ResponseEntity.ok(destination);
+    }
+
+    @DeleteMapping("/deleteRoute/{username}/{origin}/{destination}") 
+    public ResponseEntity<String> deleteRoute(@PathVariable String username, @PathVariable String origin, @PathVariable String destination) {
+        return ResponseEntity.ok(userService.deleteRoute(username, origin, destination));
     }
 }

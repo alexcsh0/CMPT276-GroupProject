@@ -1,0 +1,9 @@
+.message {
+    text-align: center;
+    height: 90%;
+    color: white;
+}
+
+body {
+    background-color: rgb(183, 211, 221);
+}

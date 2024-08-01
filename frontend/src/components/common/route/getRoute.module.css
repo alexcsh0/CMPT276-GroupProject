@@ -11,6 +11,10 @@
     overflow: auto;
 }
 
+.stepTitle {
+    text-align: center;
+}
+
 Input {
     width: 200px;
 }

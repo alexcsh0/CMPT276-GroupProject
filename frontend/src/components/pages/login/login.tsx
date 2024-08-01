@@ -51,7 +51,7 @@ export function Login() {
         password
       });
       const { token, userType } = response.data;
-      user.login(token, userType, rememberMe);
+      user.login(token, userType, username, rememberMe);
       showSnackbar('Logged in as ' + username);
       navigate('/');
     } catch (error) {

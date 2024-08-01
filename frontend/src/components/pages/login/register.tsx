@@ -64,8 +64,8 @@ export function Register() {
         userType: isAdmin ? 1 : 0
       }).then((response) => {
         try {
-          const { token, userType } = response.data;
-          user.login(token, userType, true);
+          const { token, userType, username } = response.data;
+          user.login(token, userType, username, true);
           navigate('/');
         } catch (error) {
           setError('Invalid username or password');
