@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useMemo, useRef } from 'react';
 import axios from 'axios';
-import ky from 'ky';
 import { Switch, CircularProgress } from "@mui/material";
 import {
     Box,
@@ -13,9 +12,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import {
-    getApiUrl,
-    getHandleChange,
-    getCheckboxChange
+    getApiUrl
   } from '../../../util/util';
 import Styles from './getRoute.module.css';
 import {
