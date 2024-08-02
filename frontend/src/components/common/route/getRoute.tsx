@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useMemo, useRef } from 'react';
 import axios from 'axios';
-import ky from 'ky';
 import { Switch, CircularProgress } from "@mui/material";
 import {
     Box,
@@ -13,9 +12,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import {
-    getApiUrl,
-    getHandleChange,
-    getCheckboxChange
+    getApiUrl
   } from '../../../util/util';
 import Styles from './getRoute.module.css';
 import {
@@ -76,6 +73,10 @@ export function GetRoute() {
         console.log(origin);
         console.log(destination);
 
+        console.log(username);
+        console.log(user);
+        
+
         // Step 0: Check if logged in
         try {
             if (username == null) throw error;
@@ -90,7 +91,7 @@ export function GetRoute() {
             }).then((response) => {
                 console.log(response.data);
                 const { routeId } = response.data;
-                
+        
                 // Step 2: Link relation between route and user table, and save the route on current account
                 try {
                     axios.post(`${getApiUrl()}/api/users/saveRoute/{username}/{routeId}`, {
@@ -347,12 +348,20 @@ export function GetRoute() {
                 <div className={Styles.search}>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input type='text' placeholder='Origin' ref={originRef} data-testid="origin-input" />
+                            <Input 
+                            disabled={loading} 
+                            type='text' 
+                            placeholder='Origin' 
+                            ref={originRef}/>
                         </Autocomplete>
                     </Box>
                     <Box flexGrow={1}>
                         <Autocomplete>
-                            <Input type='text' placeholder='Destination' ref={destinationRef} data-testid="destination-input" />
+                            <Input 
+                                disabled={loading} 
+                                type='text' 
+                                placeholder='Destination' 
+                                ref={destinationRef}/>
                         </Autocomplete>
                     </Box>
 
