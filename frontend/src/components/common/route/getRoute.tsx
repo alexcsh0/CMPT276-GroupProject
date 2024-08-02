@@ -70,13 +70,9 @@ export function GetRoute() {
         if (loading) return;
         setLoading(true);
 
-        console.log(origin);
-        console.log(destination);
-
-        console.log(username);
-        console.log(user);
+        console.log("Origin: " + origin);
+        console.log("Destination: " + destination);
         
-
         // Step 0: Check if logged in
         try {
             if (username == null) throw error;
@@ -89,12 +85,12 @@ export function GetRoute() {
                     'Authorization': `Bearer ${user?.token}`
                 }
             }).then((response) => {
-                console.log(response.data);
+                console.log("Route " + response.data + " has been added to " + username + "'s account");
                 const { routeId } = response.data;
         
                 // Step 2: Link relation between route and user table, and save the route on current account
                 try {
-                    axios.post(`${getApiUrl()}/api/users/saveRoute/{username}/{routeId}`, {
+                    axios.get(`${getApiUrl()}/api/users/saveRoute/{username}/{routeId}`, {
                         headers: {
                             'Authorization': `Bearer ${user?.token}`
                         }
@@ -216,7 +212,7 @@ export function GetRoute() {
                 let origin: string = "";
                 let destination: string = "";
                 for (let i = 0; i < amountOfSavedRoutes; i++) {
-                    await axios.post(`${getApiUrl()}/api/users/getRoutesOrigin/{username}/{i}`, {
+                    await axios.get(`${getApiUrl()}/api/users/getRoutesOrigin/{username}/{i}`, {
                         headers: {
                             'Authorization': `Bearer ${user?.token}`
                         }
@@ -224,7 +220,7 @@ export function GetRoute() {
                         const [ routeOrigin ] = response.data;
                         origin = routeOrigin;
                     });
-                    await axios.post(`${getApiUrl()}/api/users/getRoutesDestination/{username}/{i}`, {
+                    await axios.get(`${getApiUrl()}/api/users/getRoutesDestination/{username}/{i}`, {
                         headers: {
                             'Authorization': `Bearer ${user?.token}`
                         }
