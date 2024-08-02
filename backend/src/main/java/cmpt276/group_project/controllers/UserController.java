@@ -99,16 +99,10 @@ public class UserController {
     }
 
     // When logged in, saves a route into the user's account
-    @PostMapping("/saveRoute/{username}/{routeId}")
+    @GetMapping("/saveRoute/{username}/{routeId}")
     public User saveRouteToUser(@PathVariable String username, @PathVariable int routeId) {
         return userService.saveRouteToUser(username, routeId);
     }
-
-    @PostMapping("/saveRoute")
-    public User saveRouteToUser(@RequestBody User user) {
-        return null;
-    }
-
 
     // Returns the users amount of saved routes
     @GetMapping("/getRoutesAmount/{username}")
@@ -117,7 +111,7 @@ public class UserController {
     }
 
     // Returns the users saved routes
-    @GetMapping("/getRoutes")
+    @GetMapping("/getRoutes/{username}")
     public ResponseEntity<?> getRoutes(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUser(username).getRoutes());
     }
