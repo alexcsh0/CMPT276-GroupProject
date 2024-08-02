@@ -16,8 +16,8 @@ import DirectionsTransitIcon from '@mui/icons-material/DirectionsTransit';
 import { useUser, UserTypes } from '../user-context/user-context';
 
 const userPages = ['Calendar', 'Routes', 'Weather'];
-const adminPages = ['Alerts', 'Schedule'];
-const settings = ['Profile', 'Settings', 'Logout'];
+const adminPages = ['Alerts'];
+const settings = ['Logout'];
 
 /**
  * Project-wide navigation bar
