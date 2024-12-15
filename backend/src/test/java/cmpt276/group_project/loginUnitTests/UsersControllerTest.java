@@ -5,12 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import cmpt276.group_project.controllers.UserController;
@@ -20,23 +16,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import cmpt276.group_project.config.JWT;
 import cmpt276.group_project.services.UserService;
-//import cmpt276.group_project.models.AuthResponse;
 import static org.mockito.Mockito.when;
-import org.hamcrest.Matchers;
-
-//import static org.hamcrest.Matchers.*;
 
 import java.nio.charset.Charset;
-import java.util.List;
-//import java.util.HashMap;
-//import java.util.Map;
-import java.util.ArrayList;
 
 @WebMvcTest(UserController.class)
 public class UsersControllerTest {

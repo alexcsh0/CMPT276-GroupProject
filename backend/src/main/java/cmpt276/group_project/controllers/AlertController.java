@@ -68,6 +68,7 @@ public class AlertController {
         for (FeedEntity entity : feed.getEntityList()) {
             if (entity.getAlert().getActivePeriodCount() > 0 && entity.getAlert().getActivePeriod(0).getEnd() > 0) {
                 String header = entity.getAlert().getHeaderText().toString();
+                header = header.substring(23, header.substring(23).indexOf("\"")+21);
                 String startDate = null;
                 String endDate = null;
                 
